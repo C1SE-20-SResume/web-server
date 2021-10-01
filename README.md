@@ -7,55 +7,99 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## About SResume
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+API Url: [http://localhost/]
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Enviroment requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Composer](https://getcomposer.org/)
+- [Nodejs](https://nodejs.org/en/)
+- [Laragon](https://laragon.org/) (Optional: [XAMPP](https://www.apachefriends.org/index.html))
 
-## Learning Laravel
+## How to install
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+First, you need to open your terminal at the project path
+**Do all to use this!!!**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Install dependencies
 
-## Laravel Sponsors
+- Install vendor
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```bash
+composer install
+```
 
-### Premium Partners
+- Install node_modules
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+```bash
+npm install
+npm run dev
+```
 
-## Contributing
+### Configuration
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- Rename .env.example to .env and fill in it with your information
+  - DB_DATABASE: MySQL Database name
+  - DB_USERNAME: MySQL Database username
+  - DB_PASSWORD: MySQL Database password
 
-## Code of Conduct
+- Migrate database & seed data
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan migrate --seed
+```
 
-## Security Vulnerabilities
+- Run the command below to generate key
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan key:generate
+```
+
+### After pulled, updated code
+
+- Run the command below if have any change in composer ("composer: ..." commit)
+
+```bash
+composer update
+```
+
+- If you want to reinstall / refresh the database and seed data, run the command below
+
+```bash
+php artisan migrate:refresh --seed
+```
+
+### Run 
+
+- If you are using Laragon, then just start Apache (or Nginx) and MySQL
+- If you are not, start MySQL and run the command below
+
+```bash
+php artisan serve
+```
+
+#### XAMPP, Laragon, etc
+
+- If you are using Laragon, then your website will be at [localhost](http://localhost) or [projectfolder.test](projectname.test)
+
+- If you are not, then your website will be at [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+#### Hosting
+
+- Not available
+
+### Document
+
+- You can login with the following account:
+  - email: recruiter@example.org | password: password | level: Recruiter
+  - email: candidate@example.org | password: password | level: Candidate
+
+- API document: Not available
+
+## Known bug(s)
+
+- Run seed command sometime return error alert about existed primary key. Just run the command [here](#configuration) until it work.
 
 ## License
 
