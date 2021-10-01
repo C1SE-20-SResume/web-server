@@ -13,6 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call([
+            UserSeeder::class,
+            JobDetailSeeder::class,
+            JobKeywordSeeder::class,
+        ]);
+        // composer dump-autoload before seeder database
     }
 }
