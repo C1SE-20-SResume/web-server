@@ -24,6 +24,7 @@ class JobDetailFactory extends Factory
         return [
             'job_title' => $this->faker->words(5, true),
             'job_descrip' => $this->faker->paragraph(3, true),
+            'job_benefit' => $this->faker->paragraph(3, true),
             'salary'=> $this->faker->numberBetween(100.0, 10000.0),
             'job_place' => $this->faker->city(),
         ];

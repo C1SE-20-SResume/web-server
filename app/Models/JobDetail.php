@@ -24,15 +24,25 @@ class JobDetail extends Model
     protected $fillable = [
         'job_title',
         'job_descrip',
+        'job_benefit',
         'salary',
         'job_place',
     ];
 
     /**
-     * Get invoice information
+     * Get job's keyword information
      */
     public function keyword()
     {
-        return $this->hasMany(JobKeyword::class);
+        return $this->hasMany(JobKeyword::class, 'job_id');
     }
+
+    /**
+     * Get job's recruitment information
+     */
+    public function recruit()
+    {
+        return $this->hasMany(JobApply::class, 'job_id');
+    }
+
 }

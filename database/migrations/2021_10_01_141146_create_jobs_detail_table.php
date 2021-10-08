@@ -17,6 +17,7 @@ class CreateJobsDetailTable extends Migration
             $table->id();
             $table->string('job_title');
             $table->text('job_descrip');
+            $table->text('job_benefit');
             $table->double('salary')->default(0);
             $table->string('job_place');
             $table->timestamps();
