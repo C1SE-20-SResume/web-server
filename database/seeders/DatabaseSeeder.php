@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             JobDetailSeeder::class,
             JobKeywordSeeder::class,
+            JobApplySeeder::class,
         ]);
         // composer dump-autoload before seeder database
     }
