@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
  *
  * API for login, logout
  */
-class AuthController extends Controller
+class UserController extends Controller
 {
     /**
      * Login API
