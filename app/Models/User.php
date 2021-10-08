@@ -36,6 +36,14 @@ class User extends Authenticatable
     ];
 
     /**
+     * Get job's application information
+     */
+    public function apply()
+    {
+        return $this->hasMany(JobApply::class, 'user_id');
+    }
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
