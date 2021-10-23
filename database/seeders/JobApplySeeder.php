@@ -14,6 +14,6 @@ class JobApplySeeder extends Seeder
      */
     public function run()
     {
-        JobApply::factory(5)->create();
+        JobApply::factory(2)->create();
     }
 }

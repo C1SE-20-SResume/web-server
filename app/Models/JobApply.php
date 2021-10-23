@@ -14,7 +14,7 @@ class JobApply extends Model
      *
      * @var string
      */
-    protected $table = 'jobs_apply';
+    protected $table = 'job_applies';
 
     /**
      * The attributes that are mass assignable.
