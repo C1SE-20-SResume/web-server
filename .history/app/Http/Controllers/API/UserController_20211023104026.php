@@ -30,14 +30,11 @@ class UserController extends Controller
             $user->api_token = $api_token;
             $user->save();
 
-            return response()->json(
-                [
-                    'status' => 'success',
-                    'api_token' => $api_token,
-                    'user_info' => $user,
-                ],
-                200
-            );
+            return response()->json([
+                'code' => 1,
+                'api_token' => $api_token,
+                'user_info' => Auth::user(),
+            ]);
         }
 
         return response()->json([

@@ -34,7 +34,6 @@ class UserController extends Controller
                 [
                     'status' => 'success',
                     'api_token' => $api_token,
-                    'user_info' => $user,
                 ],
                 200
             );
