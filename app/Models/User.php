@@ -12,6 +12,13 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -41,6 +48,22 @@ class User extends Authenticatable
     public function apply()
     {
         return $this->hasMany(JobApply::class, 'user_id');
+    }
+
+    /**
+     * Get question's result information
+     */
+    public function result()
+    {
+        return $this->hasMany(QuestionResult::class, 'user_id');
+    }
+
+    /**
+     * Get company information
+     */
+    public function company()
+    {
+        return $this->hasOne(UserCompany::class);
     }
 
     /**

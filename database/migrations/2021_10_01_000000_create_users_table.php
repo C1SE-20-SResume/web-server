@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->tinyInteger('role_level')->default(0);
+            $table->foreignId('company_id')->nullable()->constrained('user_companies')->nullOnDelete();
             $table->string('api_token', 80)->unique()->nullable()->default(null);
             $table->timestamps();
         });
