@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\JobDetail;
+use App\Models\UserCompany;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class JobDetailFactory extends Factory
@@ -22,6 +23,7 @@ class JobDetailFactory extends Factory
     public function definition()
     {
         return [
+            'company_id' => UserCompany::inRandomOrder()->value('id'),
             'job_title' => $this->faker->words(5, true),
             'job_descrip' => $this->faker->paragraph(3, true),
             'job_benefit' => $this->faker->paragraph(3, true),
