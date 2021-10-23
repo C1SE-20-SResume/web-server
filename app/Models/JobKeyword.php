@@ -14,7 +14,7 @@ class JobKeyword extends Model
      *
      * @var string
      */
-    protected $table = 'jobs_keyword';
+    protected $table = 'job_keywords';
 
     /**
      * The attributes that are mass assignable.
@@ -28,7 +28,7 @@ class JobKeyword extends Model
     ];
 
     /**
-     * Get invoice information
+     * Get job's detail information
      */
     public function job()
     {

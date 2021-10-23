@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJobsKeywordTable extends Migration
+class CreateJobKeywordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateJobsKeywordTable extends Migration
      */
     public function up()
     {
-        Schema::create('jobs_keyword', function (Blueprint $table) {
-            $table->foreignId('job_id')->constrained('jobs_detail')->cascadeOnDelete();
+        Schema::create('job_keywords', function (Blueprint $table) {
+            $table->foreignId('job_id')->constrained('job_details')->cascadeOnDelete();
             $table->char('keyword');
             $table->unique(['job_id', 'keyword']);
             $table->tinyInteger('priority_weight');
@@ -29,6 +29,6 @@ class CreateJobsKeywordTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jobs_keyword');
+        Schema::dropIfExists('job_keywords');
     }
 }
