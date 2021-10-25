@@ -15,9 +15,9 @@ class UserCompanySeeder extends Seeder
     public function run()
     {
         UserCompany::factory(1)->create([
-            'company_name' => 'none',
-            'logo_url' => 'none',
+            'company_name' => 'FPT Software',
+            'logo_url' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/FPT_logo_2010.svg/1200px-FPT_logo_2010.svg.png',
         ]);
-        UserCompany::factory(3)->create();
+        UserCompany::factory(2)->create();
     }
 }
