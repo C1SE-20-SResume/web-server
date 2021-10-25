@@ -32,7 +32,7 @@ class JobDetailController extends Controller
             ]));
         }
         return response()->json([
-            'code' => 1,
+            'status' => 1,
             'data' => $data,
         ]);
     }
