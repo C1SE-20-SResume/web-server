@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\API\JobApplyController;
 use App\Http\Controllers\API\JobDetailController;
+use App\Http\Controllers\API\ScanCV;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -70,3 +71,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     */
     Route::post('recruiter/job/add', [JobDetailController::class, 'store']);
 });
+
+
+// ------------- Scan CV test --------------
+Route::post('/scan', [ScanCV::class, 'index']);
