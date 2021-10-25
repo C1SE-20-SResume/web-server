@@ -39,30 +39,35 @@ Route::group(['middleware' => 'auth:api'], function () {
     * @queryParam required: api_token
     */
     Route::get('logout', [UserController::class, 'logout']);
+    
     /**
     * Show all jobs API 
     * For page 'View job' of candidate
     * @queryParam required: api_token
     */
     Route::get('candidate/job', [JobDetailController::class, 'index']);
+    
     /**
     * Show all details of a specific job API 
     * for 'Job Details' when click a specific job in page 'View job' of candidate
     * @queryParam required: api_token
     */
     Route::get('candidate/job/{id}', [JobDetailController::class, 'show']);
+    
     /**
-    * Show summarizes the number of applies for all jobs API
+    * Show summarizes the number of applies for each job API
     * for page 'Home' of recruiter
     * @queryParam required: api_token
     */
     Route::get('recruiter/apply', [JobApplyController::class, 'index']);
+    
     /**
     * Show all details of a specific apply API 
     * for 'Apply Details' when click a specific apply in page 'Home' of recruiter
     * @queryParam required: api_token
     */
     Route::get('recruiter/apply/{id}', [JobApplyController::class, 'show']);
+
     /**
     * Add a specific job API 
     * For page 'Add job' of recruiter
