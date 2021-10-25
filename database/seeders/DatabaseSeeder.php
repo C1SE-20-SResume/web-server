@@ -14,10 +14,14 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            UserCompanySeeder::class,
             UserSeeder::class,
             JobDetailSeeder::class,
             JobKeywordSeeder::class,
             JobApplySeeder::class,
+            QuestionDetailSeeder::class,
+            QuestionOptionSeeder::class,
+            QuestionResultSeeder::class,
         ]);
         // composer dump-autoload before seeder database
     }

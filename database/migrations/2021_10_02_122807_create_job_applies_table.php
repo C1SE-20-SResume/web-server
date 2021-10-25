@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJobsApplyTable extends Migration
+class CreateJobAppliesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateJobsApplyTable extends Migration
      */
     public function up()
     {
-        Schema::create('jobs_apply', function (Blueprint $table) {
+        Schema::create('job_applies', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('job_id')->constrained('jobs_detail')->cascadeOnDelete();
+            $table->foreignId('job_id')->constrained('job_details')->cascadeOnDelete();
             $table->unique(['job_id', 'user_id']);
             $table->string('cv_file');
             $table->float('cv_score');
@@ -31,6 +31,6 @@ class CreateJobsApplyTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jobs_apply');
+        Schema::dropIfExists('job_applies');
     }
 }

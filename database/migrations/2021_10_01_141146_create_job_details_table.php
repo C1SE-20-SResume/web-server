@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJobsDetailTable extends Migration
+class CreateJobDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateJobsDetailTable extends Migration
      */
     public function up()
     {
-        Schema::create('jobs_detail', function (Blueprint $table) {
+        Schema::create('job_details', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id')->constrained('user_companies')->cascadeOnDelete();
             $table->string('job_title');
             $table->text('job_descrip');
             $table->text('job_benefit');
-            $table->double('salary')->default(0);
             $table->string('job_place');
+            $table->double('salary')->default(0);
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateJobsDetailTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jobs_detail');
+        Schema::dropIfExists('job_details');
     }
 }

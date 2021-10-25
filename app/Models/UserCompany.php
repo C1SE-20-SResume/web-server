@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JobApply extends Model
+class UserCompany extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class JobApply extends Model
      *
      * @var string
      */
-    protected $table = 'job_applies';
+    protected $table = 'user_companies';
 
     /**
      * The attributes that are mass assignable.
@@ -22,26 +22,23 @@ class JobApply extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'job_id',
-        'cv_file',
-        'cv_score',
-        'pass_status',
+        'company_name',
+        'logo_url',
     ];
-
-    /**
-     * Get job's detail information
-     */
-    public function job()
-    {
-        return $this->belongsTo(JobDetail::class);
-    }
 
     /**
      * Get user information
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'company_id');
+    }
+
+    /**
+     * Get job detail information
+     */
+    public function job()
+    {
+        return $this->hasMany(JobDetail::class, 'company_id');
     }
 }

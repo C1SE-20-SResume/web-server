@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JobKeyword extends Model
+class QuestionDetail extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class JobKeyword extends Model
      *
      * @var string
      */
-    protected $table = 'job_keywords';
+    protected $table = 'question_details';
 
     /**
      * The attributes that are mass assignable.
@@ -22,16 +22,17 @@ class JobKeyword extends Model
      * @var array
      */
     protected $fillable = [
-        'job_id',
-        'keyword',
-        'priority_weight',
+        'ques_type',
+        'ques_content',
     ];
 
     /**
-     * Get job's detail information
+     * Get option information
      */
-    public function job()
+    public function option()
     {
-        return $this->belongsTo(JobDetail::class);
+        return $this->hasMany(QuestionOption::class);
     }
+
+    
 }

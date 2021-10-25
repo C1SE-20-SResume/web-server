@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\JobApply;
+use App\Models\QuestionDetail;
 
-class JobApplySeeder extends Seeder
+class QuestionDetailSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class JobApplySeeder extends Seeder
      */
     public function run()
     {
-        JobApply::factory(2)->create();
+        QuestionDetail::factory(10)->create();
     }
 }

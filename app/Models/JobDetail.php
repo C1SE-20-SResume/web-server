@@ -14,7 +14,7 @@ class JobDetail extends Model
      *
      * @var string
      */
-    protected $table = 'jobs_detail';
+    protected $table = 'job_details';
 
     /**
      * The attributes that are mass assignable.
@@ -22,15 +22,16 @@ class JobDetail extends Model
      * @var array
      */
     protected $fillable = [
+        'company_id',
         'job_title',
         'job_descrip',
         'job_benefit',
-        'salary',
         'job_place',
+        'salary',
     ];
 
     /**
-     * Get job's keyword information
+     * Get job's keywords information
      */
     public function keyword()
     {
@@ -38,11 +39,18 @@ class JobDetail extends Model
     }
 
     /**
-     * Get job's recruitment information
+     * Get job's applies information
      */
-    public function recruit()
+    public function apply()
     {
         return $this->hasMany(JobApply::class, 'job_id');
     }
 
+    /**
+     * Get company information
+     */
+    public function company()
+    {
+        return $this->belongsTo(UserCompany::class);
+    }
 }

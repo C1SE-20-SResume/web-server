@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JobApply extends Model
+class QuestionResult extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class JobApply extends Model
      *
      * @var string
      */
-    protected $table = 'job_applies';
+    protected $table = 'question_results';
 
     /**
      * The attributes that are mass assignable.
@@ -23,18 +23,16 @@ class JobApply extends Model
      */
     protected $fillable = [
         'user_id',
-        'job_id',
-        'cv_file',
-        'cv_score',
-        'pass_status',
+        'ques_type',
+        'ques_score',
     ];
 
     /**
-     * Get job's detail information
+     * Get question information
      */
-    public function job()
+    public function question()
     {
-        return $this->belongsTo(JobDetail::class);
+        return $this->belongsTo(QuestionDetail::class);
     }
 
     /**
