@@ -23,7 +23,11 @@ class UserController extends Controller
     // check if user is logged in by api_token
     public function check()
     {
-        return response()->json(['success' => true, 'user' => Auth::user()]);
+        if (Auth::guard('api')->check()) {
+            return response()->json(['status' => 'success', 'data' => Auth::guard('api')->user()]);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
+        }
     } 
     /**
      * Login API
