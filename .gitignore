@@ -5,6 +5,7 @@
 /vendor
 /.history
 /.vs
+/public/uploads/*
 .env
 .env.backup
 .phpunit.result.cache
