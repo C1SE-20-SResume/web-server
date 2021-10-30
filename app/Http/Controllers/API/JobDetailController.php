@@ -18,7 +18,7 @@ class JobDetailController extends Controller
     {
         $jobs = JobDetail::all();
         $data = [];
-        foreach($jobs as $job) {
+        foreach ($jobs as $job) {
             $company = $job->company;
             $data[] = json_decode(json_encode([
                 'id' => $job->id,
@@ -56,28 +56,28 @@ class JobDetailController extends Controller
     public function store(Request $request)
     {
         $request = $request->only('company_id', 'job_title', 'job_descrip', 'job_benefit', 'job_place', 'salary', 'job_keyword');
-            if(isset($request['company_id']) && $request['salary'] >= 0 && isset($request['job_keyword'])) {
-                $job_id = JobDetail::create([
-                    'company_id' => $request['company_id'],
-                    'job_title' => $request['job_title'],
-                    'job_descrip' => $request['job_descrip'],
-                    'job_benefit' => $request['job_benefit'],
-                    'salary' => $request['salary'],
-                    'job_place' => $request['job_place'],
-                ])->id;
-                $job_keyword = $request['job_keyword'];
-                foreach($job_keyword as $item){
-                    JobKeyword::create([
-                        'job_id' => $job_id,
-                        'keyword' => $item['keyword'],
-                        'priority_weight' => $item['weight'],
-                    ]);
-                }
-                return response()->json([
-                    'status' => 1,
-                    'data' => $job_keyword,
+        if (isset($request['company_id']) && $request['salary'] >= 0 && isset($request['job_keyword'])) {
+            $job_id = JobDetail::create([
+                'company_id' => $request['company_id'],
+                'job_title' => $request['job_title'],
+                'job_descrip' => $request['job_descrip'],
+                'job_benefit' => $request['job_benefit'],
+                'salary' => $request['salary'],
+                'job_place' => $request['job_place'],
+            ])->id;
+            $job_keyword = $request['job_keyword'];
+            foreach ($job_keyword as $item) {
+                JobKeyword::create([
+                    'job_id' => $job_id,
+                    'keyword' => $item['keyword'],
+                    'priority_weight' => $item['weight'],
                 ]);
             }
+            return response()->json([
+                'status' => 1,
+                'data' => $job_keyword,
+            ]);
+        }
         return response()->json([
             'status' => 0,
         ]);
@@ -111,7 +111,7 @@ class JobDetailController extends Controller
                 'data' => $data,
             ]);
         }
-        
+
         return response()->json([
             'status' => 0,
         ]);
