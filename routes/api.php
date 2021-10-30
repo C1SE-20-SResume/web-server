@@ -104,11 +104,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     * For page 'Add job' when submit edit of recruiter
     * @queryParam required: api_token, company_id, job_title, job_descrip, job_benefit, job_place, salary, job_keyword[keyword, weight]
     */
-    Route::get('recruiter/job/update/{job_id}', [JobDetailController::class, 'update']);
+    Route::post('recruiter/job/update/{job_id}', [JobDetailController::class, 'update']);
 
-
-
-    
+    /**
+    * Delete a job  API 
+    * For page 'View job' of recruiter
+    * @queryParam required: api_token
+    */
+    Route::get('recruiter/job/delete/{job_id}', [JobDetailController::class, 'destroy']);
 });
 
 

@@ -138,6 +138,7 @@ class JobDetailController extends Controller
             }
             $data[] = json_decode(json_encode([
                 'id' => $job->id,
+                'company_id' => $job->company->id,
                 'job_title' => $job->job_title,
                 'job_descrip' => $job->job_descrip,
                 'job_benefit' => $job->job_benefit,
@@ -160,7 +161,7 @@ class JobDetailController extends Controller
     public function view($company_id)
     {
         $jobs = JobDetail::where('company_id', $company_id)->get();
-        if ($job->count() != 0) { 
+        if ($jobs->count() != 0) { 
             foreach($jobs as $job) {
                 $data[] = json_decode(json_encode([
                     'id' => $job->id,
@@ -220,8 +221,9 @@ class JobDetailController extends Controller
      */
     public function destroy($job_id)
     {
+        JobDetail::destroy($job_id);
         return response()->json([
-            'status' => JobDetail::destroy($job_id),
+            'status' => true,
         ]);
     }
 }
