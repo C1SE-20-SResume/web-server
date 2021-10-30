@@ -14,11 +14,11 @@ class CreateJobAppliesTable extends Migration
     public function up()
     {
         Schema::create('job_applies', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('job_id')->constrained('job_details')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('job_id')->nullable()->constrained('job_details')->nullOnDelete();
             $table->unique(['job_id', 'user_id']);
             $table->string('cv_file');
-            $table->float('cv_score');
+            $table->string('cv_score');
             $table->tinyInteger('pass_status')->default(0);
             $table->timestamps();
         });
