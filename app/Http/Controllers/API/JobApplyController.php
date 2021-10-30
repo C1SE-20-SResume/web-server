@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\JobApply;
+use App\Models\JobKeyword;
 use App\Models\JobDetail;
+use Smalot\PdfParser\Parser;
 
 class JobApplyController extends Controller
 {
@@ -61,7 +63,77 @@ class JobApplyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request = $request->only('user_id', 'job_id', 'cv_file');
+        $request->validate([
+            'cv_file' => 'required|mimes:doc,docx,pdf,png,jpg,jpeg'
+        ]);
+        if(isset($request['user_id']) && isset($request['job_id']) && $request->hasFile('cv_file')) {
+            $filenameWithExt = $request->file('cv_file')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('cv_file')->getClientOriginalExtension();
+            $fileNameToStore = time().uniqid().'_'.$filename.'.'.$extension;
+            $request->file('cv_file')->move('cv_uploads', $fileNameToStore);
+            $filePath = 'cv_uploads/'.$fileNameToStore;
+            $text = "";
+            // PDF files
+            if($request->file('cv_file')->getClientMimeType() == 'application/pdf') {
+                $parser = new Parser();
+                $pdf = $parser->parseFile($filePath);
+                $text = $pdf->getText();
+                $text = str_replace("\t", "", $text);
+                $text = str_replace("  ", " ", $text);
+            }
+            // $text = Str::lower($text); utf-8
+            $text = strtolower($text);
+            $keywords = JobKeyword::where('job_id', $request['job_id'])->get();
+            $minimum_weight = 0;
+            $cv_weight = 0;
+            foreach($keywords as $keyword){
+                $word = strtolower($keyword->keyword);
+                // $contains = Str::contains($text, 'keyword');
+                if($keyword->priority_weight == 1) {
+                    $minimum_weight = $minimum_weight + 0.3;
+                    if(str_contains($text, $word) == true)
+                        $cv_weight = $cv_weight + 0.5; 
+                }  
+                else if($keyword->priority_weight == 2) {
+                    $minimum_weight = $minimum_weight + 0.7;
+                    if(str_contains($text, $word) == true)
+                        $cv_weight = $cv_weight + 1;
+                } 
+                else if($keyword->priority_weight == 3) {
+                    $minimum_weight = $minimum_weight + 1.15;
+                    if(str_contains($text, $word) == true)
+                        $cv_weight = $cv_weight + 1.5;
+                }  
+                else if($keyword->priority_weight == 4) {
+                    $minimum_weight = $minimum_weight + 1.6;
+                    if(str_contains($text, $word) == true)
+                        $cv_weight = $cv_weight + 2;
+                }
+                else if($keyword->priority_weight == 5) {
+                    $minimum_weight = $minimum_weight + 2;
+                    if(str_contains($text, $word) == true)
+                        $cv_weight = $cv_weight + 2.5;
+                }
+            }
+            if($cv_weight >= $minimum_weight) $pass_status = 1;
+            else $pass_status = 0;
+            JobApply::create([
+                    'user_id' => $request['user_id'],
+                    'job_id' => $request['job_id'],
+                    'cv_file' => $filePath,
+                    'cv_score' => $cv_weight.'/'.$minimum_weight,
+                    'pass_status' => $pass_status,
+            ]);
+            return response()->json([
+                'status' => true,
+                'cv_pass' => $pass_status,
+            ]);
+        }
+        return response()->json([
+            'status' => false,
+        ]);
     }
 
     /**

@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     */
     Route::get('logout', [UserController::class, 'logout']);
     
+    //---API OF CANDIDATE---
     /**
     * Show all jobs API 
     * For page 'View job' of candidate
@@ -53,8 +54,16 @@ Route::group(['middleware' => 'auth:api'], function () {
     * for 'Job Details' when click a specific job in page 'View job' of candidate
     * @queryParam required: api_token
     */
-    Route::get('candidate/job/{id}', [JobDetailController::class, 'show']);
+    Route::get('candidate/job/{job_id}', [JobDetailController::class, 'show']);
+
+    /**
+    * Upload a specific CV file (.pdf) and return result API 
+    * For page 'Job details' of candidate
+    * @queryParam required: api_token, user_id, job_id, cv_file
+    */
+    Route::post('candidate/job/upload', [JobApplyController::class, 'store']);
     
+    //---API OF RECRUITER---
     /**
     * Show summarizes the number of applies for each job API
     * for page 'Home' of recruiter
@@ -63,11 +72,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('recruiter/apply', [JobApplyController::class, 'index']);
     
     /**
-    * Show all details of a specific apply API 
+    * Show all apply details of a specific job API 
     * for 'Apply Details' when click a specific apply in page 'Home' of recruiter
     * @queryParam required: api_token
     */
-    Route::get('recruiter/apply/{id}', [JobApplyController::class, 'show']);
+    Route::get('recruiter/apply/{job_id}', [JobApplyController::class, 'show']);
 
     /**
     * Add a specific job API 
@@ -75,8 +84,34 @@ Route::group(['middleware' => 'auth:api'], function () {
     * @queryParam required: api_token, company_id, job_title, job_descrip, job_benefit, job_place, salary, job_keyword[keyword, weight]
     */
     Route::post('recruiter/job/add', [JobDetailController::class, 'store']);
+
+    /**
+    * View all jobs which recruiter of a company had added API 
+    * For page 'View job' of recruiter
+    * @queryParam required: api_token
+    */
+    Route::get('recruiter/job/view/{company_id}', [JobDetailController::class, 'view']);
+
+    /**
+    * View all details of a job which had added to edit API 
+    * For page 'Add job' when edit of recruiter
+    * @queryParam required: api_token
+    */
+    Route::get('recruiter/job/edit/{job_id}', [JobDetailController::class, 'edit']);
+
+    /**
+    * Update a job which had added API 
+    * For page 'Add job' when submit edit of recruiter
+    * @queryParam required: api_token, company_id, job_title, job_descrip, job_benefit, job_place, salary, job_keyword[keyword, weight]
+    */
+    Route::get('recruiter/job/update/{job_id}', [JobDetailController::class, 'update']);
+
+
+
+    
 });
 
 
-// ------------- Scan CV test --------------
-Route::post('/scan', [ScanCV::class, 'index']);
+// Test Scan CV file upload
+Route::post('scan', [ScanCV::class, 'index']);
+
