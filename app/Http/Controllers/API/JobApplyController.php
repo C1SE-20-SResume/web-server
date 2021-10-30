@@ -128,6 +128,7 @@ class JobApplyController extends Controller
             ]);
             return response()->json([
                 'status' => true,
+                'cv_score' => $cv_weight.'/'.$minimum_weight,
                 'cv_pass' => $pass_status,
             ]);
         }
