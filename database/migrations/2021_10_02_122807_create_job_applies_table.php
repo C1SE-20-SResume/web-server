@@ -18,7 +18,7 @@ class CreateJobAppliesTable extends Migration
             $table->foreignId('job_id')->constrained('job_details')->cascadeOnDelete();
             $table->unique(['job_id', 'user_id']);
             $table->string('cv_file');
-            $table->float('cv_score');
+            $table->string('cv_score');
             $table->tinyInteger('pass_status')->default(0);
             $table->timestamps();
         });
