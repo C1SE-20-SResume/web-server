@@ -40,12 +40,8 @@ Route::group(['middleware' => 'auth:api'], function () {
      * @queryParam required: api_token
      */
     Route::get('logout', [UserController::class, 'logout']);
-<<<<<<< HEAD
-
-=======
     
     //---API OF CANDIDATE---
->>>>>>> e6a2449120d5c7437e666663413b877a81a9808d
     /**
      * Show all jobs API 
      * For page 'View job' of candidate
@@ -54,14 +50,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('candidate/job', [JobDetailController::class, 'index']);
 
     /**
-<<<<<<< HEAD
-     * Show all details of a specific job API 
-     * for 'Job Details' when click a specific job in page 'View job' of candidate
-     * @queryParam required: api_token
-     */
-    Route::get('candidate/job/{id}', [JobDetailController::class, 'show']);
-
-=======
     * Show all details of a specific job API 
     * for 'Job Details' when click a specific job in page 'View job' of candidate
     * @queryParam required: api_token
@@ -76,7 +64,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('candidate/job/upload', [JobApplyController::class, 'store']);
     
     //---API OF RECRUITER---
->>>>>>> e6a2449120d5c7437e666663413b877a81a9808d
     /**
      * Show summarizes the number of applies for each job API
      * for page 'Home' of recruiter
@@ -85,25 +72,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('recruiter/apply', [JobApplyController::class, 'index']);
 
     /**
-<<<<<<< HEAD
-     * Show all details of a specific apply API 
-     * for 'Apply Details' when click a specific apply in page 'Home' of recruiter
-     * @queryParam required: api_token
-     */
-    Route::get('recruiter/apply/{id}', [JobApplyController::class, 'show']);
-
-    /**
-     * Add a specific job API 
-     * For page 'Add job' of recruiter
-     * @queryParam required: api_token, company_id, job_title, job_descrip, job_benefit, job_place, salary, job_keyword[keyword, weight]
-     */
-    Route::post('recruiter/job/add/', [JobDetailController::class, 'store']);
-});
-
-
-// ------------- Scan CV test --------------
-Route::post('/scan', [ScanCV::class, 'index']);
-=======
     * Show all apply details of a specific job API 
     * for 'Apply Details' when click a specific apply in page 'Home' of recruiter
     * @queryParam required: api_token
@@ -150,4 +118,3 @@ Route::post('/scan', [ScanCV::class, 'index']);
 // Test Scan CV file upload
 Route::post('scan', [ScanCV::class, 'index']);
 
->>>>>>> e6a2449120d5c7437e666663413b877a81a9808d

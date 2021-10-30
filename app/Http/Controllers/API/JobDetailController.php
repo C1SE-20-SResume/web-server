@@ -57,23 +57,6 @@ class JobDetailController extends Controller
     public function store(Request $request)
     {
         $request = $request->only('company_id', 'job_title', 'job_descrip', 'job_benefit', 'job_place', 'salary', 'job_keyword');
-<<<<<<< HEAD
-        if (isset($request['company_id']) && $request['salary'] >= 0 && isset($request['job_keyword'])) {
-            $job_id = JobDetail::create([
-                'company_id' => $request['company_id'],
-                'job_title' => $request['job_title'],
-                'job_descrip' => $request['job_descrip'],
-                'job_benefit' => $request['job_benefit'],
-                'salary' => $request['salary'],
-                'job_place' => $request['job_place'],
-            ])->id;
-            $job_keyword = $request['job_keyword'];
-            foreach ($job_keyword as $item) {
-                JobKeyword::create([
-                    'job_id' => $job_id,
-                    'keyword' => $item['keyword'],
-                    'priority_weight' => $item['weight'],
-=======
             if(isset($request['company_id']) && $request['salary'] >= 0 && isset($request['job_keyword'])) {
                 $job_id = JobDetail::create([
                     'company_id' => $request['company_id'],
@@ -93,15 +76,8 @@ class JobDetailController extends Controller
                 }
                 return response()->json([
                     'status' => true,
-                    'data' => $job_keyword,
->>>>>>> e6a2449120d5c7437e666663413b877a81a9808d
                 ]);
             }
-            return response()->json([
-                'status' => 1,
-                'data' => $job_keyword,
-            ]);
-        }
         return response()->json([
             'status' => false,
         ]);
