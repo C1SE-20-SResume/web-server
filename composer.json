@@ -12,6 +12,7 @@
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3",
+        "lukemadhanga/php-document-parser": "^0.1.5",
         "smalot/pdfparser": "^1.1"
     },
     "require-dev": {

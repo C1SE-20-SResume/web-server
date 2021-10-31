@@ -7,7 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\JobApply;
 use App\Models\JobKeyword;
 use App\Models\JobDetail;
+
+/*
+* Import scan file class
+*/
 use Smalot\PdfParser\Parser;
+use LukeMadhanga\DocumentParser;
 
 class JobApplyController extends Controller
 {
@@ -62,11 +67,11 @@ class JobApplyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $request = $request->only('user_id', 'job_id', 'cv_file');
+    {   
         $request->validate([
-            'cv_file' => 'required|mimes:doc,docx,pdf,png,jpg,jpeg'
+            'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
         ]);
+        $request = $request->only('user_id', 'job_id', 'cv_file');
         if(isset($request['user_id']) && isset($request['job_id']) && $request->hasFile('cv_file')) {
             $filenameWithExt = $request->file('cv_file')->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
@@ -75,13 +80,22 @@ class JobApplyController extends Controller
             $request->file('cv_file')->move('cv_uploads', $fileNameToStore);
             $filePath = 'cv_uploads/'.$fileNameToStore;
             $text = "";
+            $mimetype = $request->file('cv_file')->getClientMimeType();
             // PDF files
-            if($request->file('cv_file')->getClientMimeType() == 'application/pdf') {
+            if($mimetype == 'application/pdf') {
                 $parser = new Parser();
                 $pdf = $parser->parseFile($filePath);
                 $text = $pdf->getText();
                 $text = str_replace("\t", "", $text);
                 $text = str_replace("  ", " ", $text);
+            }
+            // TXT, DOC, DOCX files
+            else if($mimetype == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+            || $mimetype == 'application/msword' || $mimetype == 'text/plain') {
+                $parser = new DocumentParser();
+                $text = $parser->parseFromFile($filePath, $mimetype);
+                $text = str_replace("<em>", "", $text);
+                $text = str_replace("</em>", "", $text);
             }
             // $text = Str::lower($text); utf-8
             $text = strtolower($text);
@@ -90,9 +104,9 @@ class JobApplyController extends Controller
             $cv_weight = 0;
             foreach($keywords as $keyword){
                 $word = strtolower($keyword->keyword);
-                // $contains = Str::contains($text, 'keyword');
                 if($keyword->priority_weight == 1) {
                     $minimum_weight = $minimum_weight + 0.3;
+                    // $contains = Str::contains($text, 'keyword');
                     if(str_contains($text, $word) == true)
                         $cv_weight = $cv_weight + 0.5; 
                 }  
