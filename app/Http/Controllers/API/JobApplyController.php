@@ -72,7 +72,7 @@ class JobApplyController extends Controller
         $request->validate([
             'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
         ]);
-        $request = $request->only('user_id', 'job_id', 'cv_file');
+        // $request = $request->only('user_id', 'job_id', 'cv_file');
         if(isset($request['user_id']) && isset($request['job_id']) && $request->hasFile('cv_file')) {
             $filenameWithExt = $request->file('cv_file')->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
