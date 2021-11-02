@@ -13,7 +13,8 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3",
         "lukemadhanga/php-document-parser": "^0.1.5",
-        "smalot/pdfparser": "^1.1"
+        "smalot/pdfparser": "^1.1",
+        "thiagoalessio/tesseract_ocr": "^2.12"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

@@ -94,14 +94,14 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     /**
     * View all details of a job which had added to edit API 
-    * For page 'Add job' when edit of recruiter
+    * For page 'Add job' when edit but not submit yet of recruiter
     * @queryParam required: api_token
     */
     Route::get('recruiter/job/edit/{job_id}', [JobDetailController::class, 'edit']);
 
     /**
     * Update a job which had added API 
-    * For page 'Add job' when submit edit of recruiter
+    * For page 'Add job' when click submit edit of recruiter
     * @queryParam required: api_token, company_id, job_title, job_descrip, job_benefit, job_place, salary, job_keyword[keyword, weight]
     */
     Route::post('recruiter/job/update/{job_id}', [JobDetailController::class, 'update']);

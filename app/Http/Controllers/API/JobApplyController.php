@@ -13,6 +13,7 @@ use App\Models\JobDetail;
 */
 use Smalot\PdfParser\Parser;
 use LukeMadhanga\DocumentParser;
+use thiagoalessio\TesseractOCR\TesseractOCR;
 
 class JobApplyController extends Controller
 {
@@ -96,6 +97,19 @@ class JobApplyController extends Controller
                 $text = $parser->parseFromFile($filePath, $mimetype);
                 $text = str_replace("<em>", "", $text);
                 $text = str_replace("</em>", "", $text);
+            }
+            // PNG, JPG, JPEG file
+            // Require: install Tesseract (https://github.com/UB-Mannheim/tesseract/wiki)
+            if($mime == 'image/png' || $mime == 'image/jpeg') {
+                $ocr = new TesseractOCR();
+                $ocr->image($filePath);
+                // Define a custom location of the tesseract executable, if the command 'tesseract' was not found
+                $ocr->executable('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tesseract.exe');
+                // Language default: English, if you want to be used during the recognition 
+                $ocr->lang('eng');
+                // Data trained folder path, if you want specify a custom location for the tessdata directory
+                // $ocr->tessdataDir('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tessdata');
+                $text = $ocr->run(500); // timeout: 500ms
             }
             // $text = Str::lower($text); utf-8
             $text = strtolower($text);

@@ -20,15 +20,36 @@ class UserController extends Controller
     {
         $this->middleware('auth:api')->except('login', 'register');
     }
+
     // check if user is logged in by api_token
     public function check()
     {
         if (Auth::guard('api')->check()) {
-            return response()->json(['status' => 'success', 'data' => Auth::guard('api')->user()]);
+            $user = Auth::guard('api')->user();
+            $data = json_decode(json_encode([
+                'full_name' => $user->full_name,
+                'gender' => $user->gender,
+                'phone_number' => $user->phone_number,
+                'email' => $user->email,
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at,
+            ]));
+            return response()->json([
+                'status' => true, 
+                'api_token' => $user->api_token,
+                'user_id' => $user->id,
+                'company_id' => $user->company_id,
+                'role_level' => $user->role_level,
+                'user_info' => $data,
+            ]);
         } else {
-            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 401);
+            return response()->json([
+                'status' => false, 
+                'message' => 'Unauthorized',
+            ], 401);
         }
     } 
+
     /**
      * Login API
      *
@@ -44,27 +65,16 @@ class UserController extends Controller
             $user = Auth::user();
             $user->api_token = $api_token;
             $user->save();
-            $user_info = json_decode(json_encode([
-                'full_name' => $user->full_name,
-                'gender' => $user->gender,
-                'phone_number' => $user->phone_number,
-                'email' => $user->email,
-                'created_at' => $user->created_at,
-                'updated_at' => $user->updated_at,
-            ]));
-
             return response()->json([
-                'status' => 1,
+                'status' => true,
                 'api_token' => $api_token,
                 'user_id' => $user->id,
                 'company_id' => $user->company_id,
                 'role_level' => $user->role_level,
-                'user_info' => $user_info,
             ]);
         }
-
         return response()->json([
-            'status' => 0,
+            'status' => false,
         ]);
     }
 
@@ -85,12 +95,12 @@ class UserController extends Controller
                     'password' => Hash::make($request['password']),
                 ]);
                 return response()->json([
-                    'status' => 1,
+                    'status' => true,
                 ]);
             }
         }
         return response()->json([
-            'status' => 0,
+            'status' => false,
         ]);
     }
 
@@ -107,11 +117,11 @@ class UserController extends Controller
             $user->save();
             
             return response()->json([
-                'status' => 1,
+                'status' => true,
             ]);
         }
         return response()->json([
-            'status' => 0,
+            'status' => false,
         ]);
     }
 }
