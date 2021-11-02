@@ -33,7 +33,7 @@ class JobDetailController extends Controller
             ]));
         }
         return response()->json([
-            'status' => 1,
+            'success' => true,
             'data' => $data,
         ]);
     }
@@ -75,11 +75,11 @@ class JobDetailController extends Controller
                     ]);
                 }
                 return response()->json([
-                    'status' => true,
+                    'success' => true,
                 ]);
             }
         return response()->json([
-            'status' => false,
+            'success' => false,
         ]);
     }
 
@@ -107,13 +107,13 @@ class JobDetailController extends Controller
                 'updated_at' => $job->updated_at,
             ]));
             return response()->json([
-                'status' => 1,
+                'success' => true,
                 'data' => $data,
             ]);
         }
 
         return response()->json([
-            'status' => 0,
+            'success' => false,
         ]);
     }
 
@@ -148,12 +148,12 @@ class JobDetailController extends Controller
                 'updated_at' => $job->updated_at,
             ]));
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'data' => $data,
             ]);
         }
         return response()->json([
-            'status' => false,
+            'success' => false,
         ]);
     }
 
@@ -172,12 +172,12 @@ class JobDetailController extends Controller
                     ]));
             }
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'data' => $data,
             ]);
         }
         return response()->json([
-            'status' => false,
+            'success' => false,
         ]);
     }
 
@@ -204,11 +204,11 @@ class JobDetailController extends Controller
                 ]);
             }
             return response()->json([
-                'status' => true,
+                'success' => true,
             ]);
         }
         return response()->json([
-            'status' => false,
+            '' => false,
         ]);
     }
 

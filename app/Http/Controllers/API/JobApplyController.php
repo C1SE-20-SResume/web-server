@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\JobApply;
 use App\Models\JobKeyword;
 use App\Models\JobDetail;
+use Auth;
 
 /*
 * Import scan file class
@@ -14,6 +15,7 @@ use App\Models\JobDetail;
 use Smalot\PdfParser\Parser;
 use LukeMadhanga\DocumentParser;
 use thiagoalessio\TesseractOCR\TesseractOCR;
+// Require: install Tesseract (https://github.com/UB-Mannheim/tesseract/wiki)
 
 class JobApplyController extends Controller
 {
@@ -42,12 +44,12 @@ class JobApplyController extends Controller
                 ]));
             }
             return response()->json([
-                'status' => 1,
+                'success' => true,
                 'data' => $applies,
             ]);
         }
         return response()->json([
-            'status' => 0,
+            'success' => false,
         ]);
     }
 
@@ -73,7 +75,7 @@ class JobApplyController extends Controller
             'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
         ]);
         // $request = $request->only('user_id', 'job_id', 'cv_file');
-        if(isset($request['user_id']) && isset($request['job_id']) && $request->hasFile('cv_file')) {
+        if(isset($request['job_id']) && $request->hasFile('cv_file')) {
             $filenameWithExt = $request->file('cv_file')->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('cv_file')->getClientOriginalExtension();
@@ -99,9 +101,7 @@ class JobApplyController extends Controller
                 $text = str_replace("</em>", "", $text);
             }
             // PNG, JPG, JPEG file
-            // Require: install Tesseract (https://github.com/UB-Mannheim/tesseract/wiki)
-            $mime = $request->file('cv_file')->getClientMimeType();
-            if($mime == 'image/png' || $mime == 'image/jpeg') {
+            else if($mime == 'image/png' || $mime == 'image/jpeg') {
                 $ocr = new TesseractOCR();
                 $ocr->image($filePath);
                 // Define a custom location of the tesseract executable, if the command 'tesseract' was not found
@@ -148,21 +148,22 @@ class JobApplyController extends Controller
             }
             if($cv_weight >= $minimum_weight) $pass_status = 1;
             else $pass_status = 0;
+            $user_id = Auth::user()->id;
             JobApply::create([
-                    'user_id' => $request['user_id'],
+                    'user_id' => $user_id,
                     'job_id' => $request['job_id'],
                     'cv_file' => $filePath,
                     'cv_score' => $cv_weight.'/'.$minimum_weight,
                     'pass_status' => $pass_status,
             ]);
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'cv_score' => $cv_weight.'/'.$minimum_weight,
                 'cv_pass' => $pass_status,
             ]);
         }
         return response()->json([
-            'status' => false,
+            'success' => false,
         ]);
     }
 
@@ -194,7 +195,7 @@ class JobApplyController extends Controller
                 ]));
             }
             return response()->json([
-                'status' => 1,
+                'success' => true,
                 'job_id' => $job_id,
                 'job_title' => $job->job_title,
                 'job_place' => $job->job_place,
@@ -202,7 +203,7 @@ class JobApplyController extends Controller
             ]);
         }
         return response()->json([
-            'status' => 0,
+            'success' => false,
         ]);
     }
 
