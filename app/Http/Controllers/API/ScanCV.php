@@ -56,6 +56,7 @@ class ScanCV extends Controller
                 $ocr = new TesseractOCR();
                 $ocr->image($request->file('cv_file'));
                 $ocr->lang('eng');
+                // If the command 'tesseract' was not found (Postman error), define a custom path of the tesseract executable
                 $ocr->executable('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tesseract.exe');
                 //$ocr->tessdataDir('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tessdata');
                 $text = $ocr->run(500);
