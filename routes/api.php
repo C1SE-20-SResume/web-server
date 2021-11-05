@@ -59,7 +59,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     /**
     * Upload a specific CV file (.pdf) and return result API 
     * For page 'Job details' of candidate
-    * @queryParam required: api_token, user_id, job_id, cv_file
+    * @queryParam required: api_token, job_id, cv_file
     */
     Route::post('candidate/job/upload', [JobApplyController::class, 'store']);
     

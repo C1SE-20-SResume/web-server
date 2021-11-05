@@ -8,12 +8,14 @@ use App\Models\JobApply;
 use App\Models\JobKeyword;
 use App\Models\JobDetail;
 use Illuminate\Support\Facades\Auth;
+
 /*
 * Import scan file class
 */
 use Smalot\PdfParser\Parser;
 use LukeMadhanga\DocumentParser;
 use thiagoalessio\TesseractOCR\TesseractOCR;
+// Require: install Tesseract (https://github.com/UB-Mannheim/tesseract/wiki)
 
 class JobApplyController extends Controller
 {
@@ -42,12 +44,12 @@ class JobApplyController extends Controller
                 ]));
             }
             return response()->json([
-                'status' => 1,
+                'success' => true,
                 'data' => $applies,
             ]);
         }
         return response()->json([
-            'status' => 0,
+            'success' => false,
         ]);
     }
 
@@ -68,22 +70,22 @@ class JobApplyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         $request->validate([
             'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
         ]);
         // $request = $request->only('user_id', 'job_id', 'cv_file');
-        if(isset($request['user_id']) && isset($request['job_id']) && $request->hasFile('cv_file')) {
+        if (isset($request['job_id']) && $request->hasFile('cv_file')) {
             $filenameWithExt = $request->file('cv_file')->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('cv_file')->getClientOriginalExtension();
-            $fileNameToStore = time().uniqid().'_'.$filename.'.'.$extension;
+            $fileNameToStore = time() . uniqid() . '_' . $filename . '.' . $extension;
             $request->file('cv_file')->move('cv_uploads', $fileNameToStore);
-            $filePath = 'cv_uploads/'.$fileNameToStore;
+            $filePath = 'cv_uploads/' . $fileNameToStore;
             $text = "";
             $mimetype = $request->file('cv_file')->getClientMimeType();
             // PDF files
-            if($mimetype == 'application/pdf') {
+            if ($mimetype == 'application/pdf') {
                 $parser = new Parser();
                 $pdf = $parser->parseFile($filePath);
                 $text = $pdf->getText();
@@ -91,17 +93,17 @@ class JobApplyController extends Controller
                 $text = str_replace("  ", " ", $text);
             }
             // TXT, DOC, DOCX files
-            else if($mimetype == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
-            || $mimetype == 'application/msword' || $mimetype == 'text/plain') {
+            else if (
+                $mimetype == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                || $mimetype == 'application/msword' || $mimetype == 'text/plain'
+            ) {
                 $parser = new DocumentParser();
                 $text = $parser->parseFromFile($filePath, $mimetype);
                 $text = str_replace("<em>", "", $text);
                 $text = str_replace("</em>", "", $text);
             }
             // PNG, JPG, JPEG file
-            // Require: install Tesseract (https://github.com/UB-Mannheim/tesseract/wiki)
-            $mime = $request->file('cv_file')->getClientMimeType();
-            if($mime == 'image/png' || $mime == 'image/jpeg') {
+            else if ($mimetype == 'image/png' || $mimetype == 'image/jpeg') {
                 $ocr = new TesseractOCR();
                 $ocr->image($filePath);
                 // Define a custom location of the tesseract executable, if the command 'tesseract' was not found
@@ -117,52 +119,49 @@ class JobApplyController extends Controller
             $keywords = JobKeyword::where('job_id', $request['job_id'])->get();
             $minimum_weight = 0;
             $cv_weight = 0;
-            foreach($keywords as $keyword){
+            foreach ($keywords as $keyword) {
                 $word = strtolower($keyword->keyword);
-                if($keyword->priority_weight == 1) {
+                if ($keyword->priority_weight == 1) {
                     $minimum_weight = $minimum_weight + 0.3;
                     // $contains = Str::contains($text, 'keyword');
-                    if(str_contains($text, $word) == true)
-                        $cv_weight = $cv_weight + 0.5; 
-                }  
-                else if($keyword->priority_weight == 2) {
+                    if (str_contains($text, $word) == true)
+                        $cv_weight = $cv_weight + 0.5;
+                } else if ($keyword->priority_weight == 2) {
                     $minimum_weight = $minimum_weight + 0.7;
-                    if(str_contains($text, $word) == true)
+                    if (str_contains($text, $word) == true)
                         $cv_weight = $cv_weight + 1;
-                } 
-                else if($keyword->priority_weight == 3) {
+                } else if ($keyword->priority_weight == 3) {
                     $minimum_weight = $minimum_weight + 1.15;
-                    if(str_contains($text, $word) == true)
+                    if (str_contains($text, $word) == true)
                         $cv_weight = $cv_weight + 1.5;
-                }  
-                else if($keyword->priority_weight == 4) {
+                } else if ($keyword->priority_weight == 4) {
                     $minimum_weight = $minimum_weight + 1.6;
-                    if(str_contains($text, $word) == true)
+                    if (str_contains($text, $word) == true)
                         $cv_weight = $cv_weight + 2;
-                }
-                else if($keyword->priority_weight == 5) {
+                } else if ($keyword->priority_weight == 5) {
                     $minimum_weight = $minimum_weight + 2;
-                    if(str_contains($text, $word) == true)
+                    if (str_contains($text, $word) == true)
                         $cv_weight = $cv_weight + 2.5;
                 }
             }
-            if($cv_weight >= $minimum_weight) $pass_status = 1;
+            if ($cv_weight >= $minimum_weight) $pass_status = 1;
             else $pass_status = 0;
+            $user_id = Auth::id();
             JobApply::create([
-                    'user_id' => $request['user_id'],
-                    'job_id' => $request['job_id'],
-                    'cv_file' => $filePath,
-                    'cv_score' => $cv_weight.'/'.$minimum_weight,
-                    'pass_status' => $pass_status,
+                'user_id' => $user_id,
+                'job_id' => $request['job_id'],
+                'cv_file' => $filePath,
+                'cv_score' => $cv_weight . '/' . $minimum_weight,
+                'pass_status' => $pass_status,
             ]);
             return response()->json([
-                'status' => true,
-                'cv_score' => $cv_weight.'/'.$minimum_weight,
+                'success' => true,
+                'cv_score' => $cv_weight . '/' . $minimum_weight,
                 'cv_pass' => $pass_status,
             ]);
         }
         return response()->json([
-            'status' => false,
+            'success' => false,
         ]);
     }
 
@@ -194,7 +193,7 @@ class JobApplyController extends Controller
                 ]));
             }
             return response()->json([
-                'status' => 1,
+                'success' => true,
                 'job_id' => $job_id,
                 'job_title' => $job->job_title,
                 'job_place' => $job->job_place,
@@ -202,7 +201,7 @@ class JobApplyController extends Controller
             ]);
         }
         return response()->json([
-            'status' => 0,
+            'success' => false,
         ]);
     }
 
