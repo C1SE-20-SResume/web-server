@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\JobApply;
 use App\Models\JobKeyword;
 use App\Models\JobDetail;
-
+use Illuminate\Support\Facades\Auth;
 /*
 * Import scan file class
 */
