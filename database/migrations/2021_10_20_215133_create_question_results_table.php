@@ -14,8 +14,9 @@ class CreateQuestionResultsTable extends Migration
     public function up()
     {
         Schema::create('question_results', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('ques_id')->constrained('question_details')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('type_id')->nullable()->constrained('question_types')->nullOnDelete();
+            $table->unique(['user_id', 'type_id']);
             $table->tinyInteger('ques_score');
             $table->timestamps();
         });

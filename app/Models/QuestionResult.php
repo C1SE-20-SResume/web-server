@@ -23,16 +23,16 @@ class QuestionResult extends Model
      */
     protected $fillable = [
         'user_id',
-        'ques_type',
+        'type_id',
         'ques_score',
     ];
 
     /**
-     * Get question information
+     * Get question's type information
      */
-    public function question()
+    public function type()
     {
-        return $this->belongsTo(QuestionDetail::class);
+        return $this->belongsTo(QuestionType::class);
     }
 
     /**

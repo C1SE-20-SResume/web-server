@@ -23,7 +23,7 @@ class QuestionOptionFactory extends Factory
     public function definition()
     {
         return [
-            'ques_id' => QuestionDetail::inRandomOrder()->value('id'),
+            // 'ques_id' => QuestionDetail::inRandomOrder()->value('id'),
             'option_content' => $this->faker->paragraph(3, true),
         ];
     }

@@ -15,7 +15,8 @@ class CreateQuestionDetailsTable extends Migration
     {
         Schema::create('question_details', function (Blueprint $table) {
             $table->id();
-            $table->char('ques_type');
+            $table->foreignId('company_id')->nullable()->constrained('user_companies')->nullOnDelete();
+            $table->foreignId('type_id')->nullable()->constrained('question_types')->nullOnDelete();
             $table->text('ques_content');
             $table->timestamps();
         });
