@@ -107,7 +107,7 @@ class JobApplyController extends Controller
                 $ocr = new TesseractOCR();
                 $ocr->image($filePath);
                 // Define a custom location of the tesseract executable, if the command 'tesseract' was not found
-                $ocr->executable('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tesseract.exe');
+                $ocr->executable('C:\Program Files\Tesseract-OCR\tesseract.exe');
                 // Language default: English, if you want to be used during the recognition 
                 $ocr->lang('eng');
                 // Data trained folder path, if you want specify a custom location for the tessdata directory
