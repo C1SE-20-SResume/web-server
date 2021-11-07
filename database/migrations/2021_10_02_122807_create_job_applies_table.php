@@ -18,8 +18,8 @@ class CreateJobAppliesTable extends Migration
             $table->foreignId('job_id')->nullable()->constrained('job_details')->nullOnDelete();
             $table->unique(['job_id', 'user_id']);
             $table->string('cv_file');
-            $table->string('cv_score');
-            $table->tinyInteger('pass_status')->default(0);
+            $table->float('cv_score');
+            $table->tinyInteger('pass_status');
             $table->timestamps();
         });
     }

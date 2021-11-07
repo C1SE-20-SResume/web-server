@@ -26,9 +26,12 @@ class JobDetailFactory extends Factory
             'company_id' => UserCompany::inRandomOrder()->value('id'),
             'job_title' => $this->faker->words(5, true),
             'job_descrip' => $this->faker->paragraph(3, true),
+            'job_require' => $this->faker->paragraph(3, true),
             'job_benefit' => $this->faker->paragraph(3, true),
-            'salary'=> $this->faker->numberBetween(100.0, 10000.0),
             'job_place' => $this->faker->city(),
+            'salary'=> $this->faker->numberBetween(100.0, 10000.0),
+            'date_expire'=> $this->faker->dateTimeBetween('2021-10-01 00:00:00', '2021-12-12 00:00:00', null),
+            'require_score'=> $this->faker->numberBetween(1.0, 5.0),
         ];
     }
 }

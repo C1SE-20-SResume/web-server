@@ -25,9 +25,12 @@ class JobDetail extends Model
         'company_id',
         'job_title',
         'job_descrip',
+        'job_require',
         'job_benefit',
         'job_place',
         'salary',
+        'date_expire',
+        'require_score',
     ];
 
     /**
