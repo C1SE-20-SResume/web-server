@@ -24,8 +24,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'company_id',
         'full_name',
         'gender',
+        'date_birth',
         'phone_number',
         'email',
         'password',
@@ -51,7 +53,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get question's result information
+     * Get quiz's result information
      */
     public function result()
     {
@@ -63,7 +65,7 @@ class User extends Authenticatable
      */
     public function company()
     {
-        return $this->hasOne(UserCompany::class);
+        return $this->belongsTo(UserCompany::class);
     }
 
     /**
