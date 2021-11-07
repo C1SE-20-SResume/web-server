@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\JobDetail;
 use App\Models\JobKeyword;
+use Carbon\Carbon;
 
 class JobDetailController extends Controller
 {
@@ -18,19 +19,22 @@ class JobDetailController extends Controller
     {
         $jobs = JobDetail::all();
         $data = [];
+        $currentTime = now();
         foreach ($jobs as $job) {
-            $company = $job->company;
-            $data[] = json_decode(json_encode([
-                'id' => $job->id,
-                'company_id' => $company->id,
-                'company_name' => $company->company_name,
-                'logo_url' => $company->logo_url,
-                'job_title' => $job->job_title,
-                'job_place' => $job->job_place,
-                'salary' => $job->salary,
-                'created_at' => $job->created_at,
-                'updated_at' => $job->updated_at,
-            ]));
+            if($job->date_expire >= $currentTime->toDateTimeString()){
+                $company = $job->company;
+                $data[] = json_decode(json_encode([
+                    'job_id' => $job->id,
+                    'company_name' => $company->company_name,
+                    'logo_url' => $company->logo_url,
+                    'job_title' => $job->job_title,
+                    'job_place' => $job->job_place,
+                    'salary' => $job->salary,
+                    'date_expire' => $job->date_expire,
+                    'created_at' => $job->created_at,
+                    'updated_at' => $job->updated_at,
+                ]));
+            }
         }
         return response()->json([
             'success' => true,
@@ -92,7 +96,8 @@ class JobDetailController extends Controller
     public function show($id)
     {
         $job = JobDetail::where('id', $id)->first();
-        if ($job->count() != 0) {
+        $currentTime = now();
+        if ($job->count() != 0 && $job->date_expire >= $currentTime->toDateTimeString()) {
             $company = $job->company;
             $data = json_decode(json_encode([
                 'id' => $job->id,
@@ -100,9 +105,11 @@ class JobDetailController extends Controller
                 'logo_url' => $company->logo_url,
                 'job_title' => $job->job_title,
                 'job_descrip' => $job->job_descrip,
+                'job_require' => $job->job_require,
                 'job_benefit' => $job->job_benefit,
                 'job_place' => $job->job_place,
                 'salary' => $job->salary,
+                'date_expire' => $job->date_expire,
                 'created_at' => $job->created_at,
                 'updated_at' => $job->updated_at,
             ]));

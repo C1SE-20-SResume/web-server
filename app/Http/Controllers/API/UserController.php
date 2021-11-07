@@ -26,25 +26,54 @@ class UserController extends Controller
     {
         if (Auth::guard('api')->check()) {
             $user = Auth::guard('api')->user();
-            $data = json_decode(json_encode([
-                'full_name' => $user->full_name,
-                'gender' => $user->gender,
-                'phone_number' => $user->phone_number,
-                'email' => $user->email,
-                'created_at' => $user->created_at,
-                'updated_at' => $user->updated_at,
-            ]));
+            $data = null;
+            if($user->role_level == 0) {
+                $results = $user->result;
+                $apptitude_score = null;
+                $personality_score = null;
+                foreach($results as $result) {
+                    if($result->type_id == 1 || $result->type_id == 2 || $result->type_id == 3) {
+                        $apptitude_score = $apptitude_score + $result->ques_score;
+                    }
+                    else $personality_score = $personality_score + $result->ques_score;
+                }
+                $data = json_decode(json_encode([
+                    'apptitude_score' => $apptitude_score,
+                    'personality_score' => $personality_score,
+                    'full_name' => $user->full_name,
+                    'gender' => $user->gender,
+                    'date_birth' => $user->date_birth,
+                    'phone_number' => $user->phone_number,
+                    'email' => $user->email,
+                    'created_at' => $user->created_at,
+                    'updated_at' => $user->updated_at,
+                ]));
+            }
+            else {
+                $company = $user->company;
+                $data = json_decode(json_encode([
+                    'company_name' => $company->company_name,
+                    'logo_url' => $company->logo_url,
+                    'full_name' => $user->full_name,
+                    'gender' => $user->gender,
+                    'date_birth' => $user->date_birth,
+                    'phone_number' => $user->phone_number,
+                    'email' => $user->email,
+                    'created_at' => $user->created_at,
+                    'updated_at' => $user->updated_at,
+                ]));
+            }
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'api_token' => $user->api_token,
+                'role_level' => $user->role_level,
                 'user_id' => $user->id,
                 'company_id' => $user->company_id,
-                'role_level' => $user->role_level,
                 'user_info' => $data,
             ]);
         } else {
             return response()->json([
-                'status' => false,
+                'success' => false,
                 'message' => 'Unauthorized',
             ], 401);
         }
@@ -66,15 +95,16 @@ class UserController extends Controller
             $user->api_token = $api_token;
             $user->save();
             return response()->json([
-                'status' => true,
+                'success' => true,
                 'api_token' => $api_token,
+                'role_level' => $user->role_level,
                 'user_id' => $user->id,
                 'company_id' => $user->company_id,
-                'role_level' => $user->role_level,
             ]);
         }
         return response()->json([
-            'status' => false,
+            'success' => false,
+            'message' => 'Login failed',
         ]);
     }
 
@@ -83,24 +113,32 @@ class UserController extends Controller
      */
     public function register(Request $request)
     {
-        $check_user = User::where('email', $request['email'])->get();
-        if ($check_user->count() == 0 && isset($request['password']) && isset($request['phone_number'])) {
-            $request = $request->only('full_name', 'gender', 'phone_number', 'email', 'password');
-            if ($request != null) {
+        if(isset($request['email'])) {
+            $check_user = User::where('email', $request['email'])->get();
+            if ($check_user->count() == 0 && isset($request['password'])) {
+                $request = $request->only('full_name', 'gender', 'date_birth', 'phone_number', 'email', 'password');
                 User::create([
                     'full_name' => $request['full_name'],
                     'gender' => $request['gender'],
+                    'date_birth' => $request['date_birth'],
                     'phone_number' => $request['phone_number'],
                     'email' => $request['email'],
                     'password' => Hash::make($request['password']),
                 ]);
                 return response()->json([
-                    'status' => true,
+                        'success' => true,
+                        'message' => 'Register successful'
+                ]);
+            }
+            else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email already exists'
                 ]);
             }
         }
         return response()->json([
-            'status' => false,
+            'success' => false,
         ]);
     }
 
@@ -115,13 +153,13 @@ class UserController extends Controller
             $user = Auth::user();
             $user->api_token = null;
             $user->save();
-
             return response()->json([
-                'status' => true,
+                'success' => true,
+                'message'=> 'Logout successful'
             ]);
         }
         return response()->json([
-            'status' => false,
+            'success' => false,
         ]);
     }
 }
