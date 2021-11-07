@@ -35,7 +35,7 @@ class UserController extends Controller
                 'updated_at' => $user->updated_at,
             ]));
             return response()->json([
-                'status' => true, 
+                'status' => true,
                 'api_token' => $user->api_token,
                 'user_id' => $user->id,
                 'company_id' => $user->company_id,
@@ -44,11 +44,11 @@ class UserController extends Controller
             ]);
         } else {
             return response()->json([
-                'status' => false, 
+                'status' => false,
                 'message' => 'Unauthorized',
             ], 401);
         }
-    } 
+    }
 
     /**
      * Login API
@@ -80,13 +80,13 @@ class UserController extends Controller
 
     /**
      * Register API
-    */
+     */
     public function register(Request $request)
     {
-        $check_user = User::where('email', $request['email'])->first();
+        $check_user = User::where('email', $request['email'])->get();
         if ($check_user->count() == 0 && isset($request['password']) && isset($request['phone_number'])) {
             $request = $request->only('full_name', 'gender', 'phone_number', 'email', 'password');
-            if($request != null){
+            if ($request != null) {
                 User::create([
                     'full_name' => $request['full_name'],
                     'gender' => $request['gender'],
@@ -115,7 +115,7 @@ class UserController extends Controller
             $user = Auth::user();
             $user->api_token = null;
             $user->save();
-            
+
             return response()->json([
                 'status' => true,
             ]);
