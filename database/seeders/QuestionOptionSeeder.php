@@ -15,10 +15,15 @@ class QuestionOptionSeeder extends Seeder
      */
     public function run()
     {
-        $ques_id = QuestionDetail::whereIn('ques_type', array('math', 'english', 'programing'))->get();
+        $ques_id = QuestionDetail::whereIn('type_id', array(1, 2, 3))->get();
         foreach($ques_id as $item) {
-            QuestionOption::factory(4)->create([
+            QuestionOption::factory(3)->create([
                 'ques_id' => $item->id,
+                'option_correct' => 0,
+            ]);
+            QuestionOption::factory(1)->create([
+                'ques_id' => $item->id,
+                'option_correct' => 1,
             ]);
         }
     }

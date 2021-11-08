@@ -17,7 +17,7 @@ class CreateQuestionOptionsTable extends Migration
             $table->id();
             $table->foreignId('ques_id')->constrained('question_details')->cascadeOnDelete();
             $table->text('option_content');
-            $table->tinyInteger('option_correct')->default(0);
+            $table->tinyInteger('option_correct');
             $table->timestamps();
         });
     }

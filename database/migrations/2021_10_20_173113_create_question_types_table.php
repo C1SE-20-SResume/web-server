@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateQuestionDetailsTable extends Migration
+class CreateQuestionTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateQuestionDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('question_details', function (Blueprint $table) {
+        Schema::create('question_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->nullable()->constrained('user_companies')->nullOnDelete();
-            $table->foreignId('type_id')->nullable()->constrained('question_types')->nullOnDelete();
-            $table->text('ques_content');
+            $table->string('type_name');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ class CreateQuestionDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('question_details');
+        Schema::dropIfExists('question_types');
     }
 }

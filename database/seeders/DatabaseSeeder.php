@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             JobDetailSeeder::class,
             JobKeywordSeeder::class,
             JobApplySeeder::class,
+            QuestionTypeSeeder::class,
             QuestionDetailSeeder::class,
             QuestionOptionSeeder::class,
             QuestionResultSeeder::class,

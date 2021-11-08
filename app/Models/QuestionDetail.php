@@ -22,17 +22,32 @@ class QuestionDetail extends Model
      * @var array
      */
     protected $fillable = [
-        'ques_type',
+        'company_id',
+        'type_id',
         'ques_content',
     ];
 
     /**
-     * Get option information
+     * Get question's option information
      */
     public function option()
     {
         return $this->hasMany(QuestionOption::class);
     }
 
+    /**
+     * Get question's type information
+     */
+    public function type()
+    {
+        return $this->belongsTo(QuestionType::class);
+    }
     
+    /**
+     * Get company information
+     */
+    public function company()
+    {
+        return $this->belongsTo(UserCompany::class);
+    }
 }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class QuestionResult extends Model
+class QuestionType extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class QuestionResult extends Model
      *
      * @var string
      */
-    protected $table = 'question_results';
+    protected $table = 'question_types';
 
     /**
      * The attributes that are mass assignable.
@@ -22,24 +22,22 @@ class QuestionResult extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'type_id',
-        'ques_score',
+        'type_name',
     ];
 
     /**
-     * Get question's type information
+     * Get question information
      */
-    public function type()
+    public function question()
     {
-        return $this->belongsTo(QuestionType::class);
+        return $this->hasMany(QuestionDetail::class, 'type_id');
     }
 
     /**
-     * Get user information
+     * Get quiz's result information
      */
-    public function user()
+    public function result()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(QuestionResult::class, 'type_id');
     }
 }

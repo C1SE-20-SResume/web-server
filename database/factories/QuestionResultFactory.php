@@ -24,9 +24,9 @@ class QuestionResultFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => User::inRandomOrder()->value('id'),
-            'ques_id' => QuestionDetail::inRandomOrder()->value('id'),
-            'ques_score'=> $this->faker->numberBetween(1.0, 5.0),
+            // 'user_id' => User::inRandomOrder()->value('id'),
+            // 'type_id' => QuestionDetail::inRandomOrder()->value('id'),
+            'ques_score'=> $this->faker->numberBetween(1, 5),
         ];
     }
 }

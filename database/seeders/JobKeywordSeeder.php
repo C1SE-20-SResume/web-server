@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\JobKeyword;
+use App\Models\JobDetail;
 
 class JobKeywordSeeder extends Seeder
 {
@@ -14,9 +15,12 @@ class JobKeywordSeeder extends Seeder
      */
     public function run()
     {
-        $numberOfKeyword = rand(1, 5);
-        for ($i = 0; $i <= $numberOfKeyword; $i++) {
-            JobKeyword::factory(1)->create();
+        $jobs = JobDetail::all();
+        foreach($jobs as $job) {
+            $numberOfKeyword = rand(1, 5);
+            JobKeyword::factory($numberOfKeyword)->create([
+                'job_id' => $job->id,
+            ]);
         }
     }
 }

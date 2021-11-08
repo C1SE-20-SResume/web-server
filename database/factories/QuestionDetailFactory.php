@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\QuestionType;
 use App\Models\QuestionDetail;
+use App\Models\UserCompany;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class QuestionDetailFactory extends Factory
@@ -22,9 +24,9 @@ class QuestionDetailFactory extends Factory
     public function definition()
     {
         return [
-            'ques_type' => $this->faker->randomElement(['math', 'english', 'programing', 
-                                                        'open', 'conscientious', 'extravert', 'agreeable', 'neurotic']),
-            'ques_content' => $this->faker->paragraph(3, true),
+            'company_id' => UserCompany::inRandomOrder()->value('id'),
+            'type_id' => QuestionType::inRandomOrder()->value('id'),
+            'ques_content' => $this->faker->paragraph(1, true),
         ];
     }
 }

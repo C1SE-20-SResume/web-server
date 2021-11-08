@@ -31,7 +31,7 @@ class UserCompany extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'company_id');
+        return $this->hasOne(User::class, 'company_id');
     }
 
     /**
@@ -40,5 +40,13 @@ class UserCompany extends Model
     public function job()
     {
         return $this->hasMany(JobDetail::class, 'company_id');
+    }
+
+    /**
+     * Get question detail information
+     */
+    public function question()
+    {
+        return $this->hasMany(QuestionDetail::class, 'company_id');
     }
 }
