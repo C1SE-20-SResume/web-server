@@ -75,6 +75,7 @@ class UserController extends Controller
         }
         return response()->json([
             'status' => false,
+            'message' => 'Unauthorized',
         ]);
     }
 
