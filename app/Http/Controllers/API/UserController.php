@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 /**
  * @group Auth API
@@ -44,8 +45,8 @@ class UserController extends Controller
                     'date_birth' => $user->date_birth,
                     'phone_number' => $user->phone_number,
                     'email' => $user->email,
-                    'created_at' => $user->created_at,
-                    'updated_at' => $user->updated_at,
+                    'created_at' => $user->created_at->toDateTimeString(),
+                    'updated_at' => $user->updated_at->toDateTimeString(),
                 ]));
             } else {
                 $company = $user->company;
@@ -57,8 +58,8 @@ class UserController extends Controller
                     'date_birth' => $user->date_birth,
                     'phone_number' => $user->phone_number,
                     'email' => $user->email,
-                    'created_at' => $user->created_at,
-                    'updated_at' => $user->updated_at,
+                    'created_at' => $user->created_at->toDateTimeString(),
+                    'updated_at' => $user->updated_at->toDateTimeString(),
                 ]));
             }
             return response()->json([

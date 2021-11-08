@@ -77,10 +77,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('recruiter/apply/{job_id}', [JobApplyController::class, 'show']);
 
     /**
-     * Add a specific job API 
-     * For page 'Add job' of recruiter
-     * @queryParam required: api_token, company_id, job_title, job_descrip, job_benefit, job_place, salary, job_keyword[keyword, weight]
-     */
+    * Add a specific job API 
+    * For page 'Add job' of recruiter
+    * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, job_place, salary, date_expire, job_keyword[keyword, weight]
+    */
     Route::post('recruiter/job/add', [JobDetailController::class, 'store']);
 
     /**
@@ -88,7 +88,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      * For page 'View job' of recruiter
      * @queryParam required: api_token
      */
-    Route::get('recruiter/job/view/{company_id}', [JobDetailController::class, 'view']);
+    Route::get('recruiter/job/view', [JobDetailController::class, 'view']);
 
     /**
      * View all details of a job which had added to edit API 
@@ -100,22 +100,18 @@ Route::group(['middleware' => 'auth:api'], function () {
     /**
      * Update a job which had added API 
      * For page 'Add job' when click submit edit of recruiter
-     * @queryParam required: api_token, company_id, job_title, job_descrip, job_benefit, job_place, salary, job_keyword[keyword, weight]
+     * @queryParam required: api_token, job_id, job_title, job_descrip, job_require, job_benefit, job_place, salary, date_expire, job_keyword[keyword, weight]
      */
-    Route::post('recruiter/job/update/{job_id}', [JobDetailController::class, 'update']);
+    Route::post('recruiter/job/update', [JobDetailController::class, 'update']);
 
     /**
-     * Delete a job  API 
-     * For page 'View job' of recruiter
-     * @queryParam required: api_token
-     */
-    Route::get('recruiter/job/delete/{job_id}', [JobDetailController::class, 'destroy']);
-
+    * Delete a job  API 
+    * For page 'View job' of recruiter
+    * @queryParam required: api_token
+    */
+    // Route::get('recruiter/job/delete/{job_id}', [JobDetailController::class, 'destroy']);
 
     //---API OF CANDIDATE---
-
-
-
 
     /**
      * Upload a specific CV file (.pdf) and return result API 

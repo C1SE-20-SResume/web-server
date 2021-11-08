@@ -8,6 +8,7 @@ use App\Models\JobApply;
 use App\Models\JobKeyword;
 use App\Models\JobDetail;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 /*
 * Import scan file class
@@ -33,18 +34,20 @@ class JobApplyController extends Controller
                 $apply = $job->apply->count();
                 $company = $job->company;
                 $applies[] = json_decode(json_encode([
-                    'id' => $job->id,
-                    'company_name' => $company->company_name,
-                    'logo_url' => $company->logo_url,
+                    'job_id' => $job->id,
                     'job_title' => $job->job_title,
                     'job_place' => $job->job_place,
-                    'apply_count' => $apply,
-                    'created_at' => $job->created_at,
-                    'updated_at' => $job->updated_at,
+                    'salary' => $job->salary,
+                    'date_expire' => $job->date_expire,
+                    'apply_sum' => $apply,
+                    'created_at' => $job->created_at->toDateTimeString(),
+                    'updated_at' => $job->updated_at->toDateTimeString(),
                 ]));
             }
             return response()->json([
                 'success' => true,
+                'company_name' => $company->company_name,
+                'logo_url' => $company->logo_url,
                 'data' => $applies,
             ]);
         }
@@ -71,11 +74,27 @@ class JobApplyController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
-        ]);
         // $request = $request->only('user_id', 'job_id', 'cv_file');
         if (isset($request['job_id']) && $request->hasFile('cv_file')) {
+            $currentTime = now();
+            $job = JobDetail::where('id', $request['job_id'])->first();
+            if($job->date_expire < $currentTime->toDateTimeString()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Job has expired',
+                ]);
+            }
+            $user = Auth::user();
+            $apply = JobApply::where('job_id', $request['job_id'])->where('user_id', $user->id)->first();
+            if($apply != null) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You have applied for this job',
+                ]);
+            }
+            $request->validate([
+                'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
+            ]);
             $filenameWithExt = $request->file('cv_file')->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('cv_file')->getClientOriginalExtension();
@@ -106,10 +125,10 @@ class JobApplyController extends Controller
             else if ($mimetype == 'image/png' || $mimetype == 'image/jpeg') {
                 $ocr = new TesseractOCR();
                 $ocr->image($filePath);
-                // Define a custom location of the tesseract executable, if the command 'tesseract' was not found
-                // $ocr->executable('C:\Program Files\Tesseract-OCR\tesseract.exe');
                 // Language default: English, if you want to be used during the recognition 
                 $ocr->lang('eng');
+                // Define a custom location of the tesseract executable, if the command 'tesseract' was not found
+                // $ocr->executable('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tesseract.exe');
                 // Data trained folder path, if you want specify a custom location for the tessdata directory
                 // $ocr->tessdataDir('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tessdata');
                 $text = $ocr->run(500); // timeout: 500ms
@@ -117,46 +136,42 @@ class JobApplyController extends Controller
             // $text = Str::lower($text); utf-8
             $text = strtolower($text);
             $keywords = JobKeyword::where('job_id', $request['job_id'])->get();
-            $minimum_weight = 0;
             $cv_weight = 0;
             foreach ($keywords as $keyword) {
                 $word = strtolower($keyword->keyword);
-                if ($keyword->priority_weight == 1) {
-                    $minimum_weight = $minimum_weight + 0.3;
-                    // $contains = Str::contains($text, 'keyword');
-                    if (str_contains($text, $word) == true)
+                // $contains = Str::contains($text, 'keyword');
+                if (str_contains($text, $word) == true) {
+                    if ($keyword->priority_weight == 1) {
                         $cv_weight = $cv_weight + 0.5;
-                } else if ($keyword->priority_weight == 2) {
-                    $minimum_weight = $minimum_weight + 0.7;
-                    if (str_contains($text, $word) == true)
+                    }
+                    else if ($keyword->priority_weight == 2) {
                         $cv_weight = $cv_weight + 1;
-                } else if ($keyword->priority_weight == 3) {
-                    $minimum_weight = $minimum_weight + 1.15;
-                    if (str_contains($text, $word) == true)
+                    } 
+                    else if ($keyword->priority_weight == 3) {
                         $cv_weight = $cv_weight + 1.5;
-                } else if ($keyword->priority_weight == 4) {
-                    $minimum_weight = $minimum_weight + 1.6;
-                    if (str_contains($text, $word) == true)
+                    } 
+                    else if ($keyword->priority_weight == 4) {
                         $cv_weight = $cv_weight + 2;
-                } else if ($keyword->priority_weight == 5) {
-                    $minimum_weight = $minimum_weight + 2;
-                    if (str_contains($text, $word) == true)
+                    } 
+                    else if ($keyword->priority_weight == 5) {
                         $cv_weight = $cv_weight + 2.5;
+                    }
                 }
             }
-            if ($cv_weight >= $minimum_weight) $pass_status = 1;
+            if ($cv_weight >= $job->require_score) 
+                $pass_status = 1;
             else $pass_status = 0;
-            $user_id = Auth::id();
             JobApply::create([
-                'user_id' => $user_id,
+                'user_id' => $user->id,
                 'job_id' => $request['job_id'],
                 'cv_file' => $filePath,
-                'cv_score' => $cv_weight . '/' . $minimum_weight,
+                'cv_score' => $cv_weight,
                 'pass_status' => $pass_status,
             ]);
             return response()->json([
                 'success' => true,
-                'cv_score' => $cv_weight . '/' . $minimum_weight,
+                'require_score' => $job->require_score,
+                'cv_score' => $cv_weight,
                 'cv_pass' => $pass_status,
             ]);
         }
@@ -177,26 +192,56 @@ class JobApplyController extends Controller
         if ($applies->count() != 0) {
             $applies_user = [];
             $job = $applies->first()->job;
+            $company = $job->company;
             foreach ($applies as $apply) {
                 $user = $apply->user;
+                $results = $user->result;
+                $apptitude_score = [];
+                $personality_score = [];
+                foreach($results as $result) {
+                    if($result->type_id == 1 || $result->type_id == 2 || $result->type_id == 3) {
+                        $type = $result->type;
+                        $apptitude_score[] = json_decode(json_encode([
+                            'type_name' => $type->type_name,
+                            'score' => $result->ques_score,
+                        ]));
+                    }
+                    else {
+                        $type = $result->type;
+                        $personality_score[] = json_decode(json_encode([
+                            'type_name' => $type->type_name,
+                            'score' => $result->ques_score,
+                        ]));
+                    }
+                }
                 $applies_user[] = json_decode(json_encode([
                     'user_id' => $user->id,
                     'full_name' => $user->full_name,
                     'gender' => $user->gender,
+                    'date_birh' => $user->date_birth,
+                    'phone_number' => $user->phone_number,
+                    'email' => $user->email,
                     'cv_file' => $apply->cv_file,
                     'cv_score' => $apply->cv_score,
                     'pass_status' => $apply->pass_status,
-                    'phone_number' => $user->phone_number,
-                    'email' => $user->email,
-                    'created_at' => $apply->created_at,
-                    'updated_at' => $apply->updated_at,
+                    'apply_created_at' => $apply->created_at->toDateTimeString(),
+                    'apply_updated_at' => $apply->updated_at->toDateTimeString(),
+                    'apptitude_score' => $apptitude_score,
+                    'personality_score' => $personality_score,
                 ]));
             }
             return response()->json([
                 'success' => true,
                 'job_id' => $job_id,
+                'company_name' => $company->company_name,
+                'logo_url' => $company->logo_url,
                 'job_title' => $job->job_title,
                 'job_place' => $job->job_place,
+                'salary' => $job->salary,
+                'date_expire' => $job->date_expire,
+                'require_score' => $job->require_score,
+                'job_created_at' => $job->created_at->toDateTimeString(),
+                'job_updated_at' => $job->updated_at->toDateTimeString(),
                 'data' => $applies_user,
             ]);
         }
