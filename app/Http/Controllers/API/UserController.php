@@ -27,15 +27,14 @@ class UserController extends Controller
         if (Auth::guard('api')->check()) {
             $user = Auth::guard('api')->user();
             $data = null;
-            if($user->role_level == 0) {
+            if ($user->role_level == 0) {
                 $results = $user->result;
                 $apptitude_score = null;
                 $personality_score = null;
-                foreach($results as $result) {
-                    if($result->type_id == 1 || $result->type_id == 2 || $result->type_id == 3) {
+                foreach ($results as $result) {
+                    if ($result->type_id == 1 || $result->type_id == 2 || $result->type_id == 3) {
                         $apptitude_score = $apptitude_score + $result->ques_score;
-                    }
-                    else $personality_score = $personality_score + $result->ques_score;
+                    } else $personality_score = $personality_score + $result->ques_score;
                 }
                 $data = json_decode(json_encode([
                     'apptitude_score' => $apptitude_score,
@@ -48,8 +47,7 @@ class UserController extends Controller
                     'created_at' => $user->created_at,
                     'updated_at' => $user->updated_at,
                 ]));
-            }
-            else {
+            } else {
                 $company = $user->company;
                 $data = json_decode(json_encode([
                     'company_name' => $company->company_name,
@@ -103,13 +101,8 @@ class UserController extends Controller
             ]);
         }
         return response()->json([
-<<<<<<< HEAD
-            'status' => false,
-            'message' => 'Unauthorized',
-=======
             'success' => false,
             'message' => 'Login failed',
->>>>>>> f52c6ec2321f01f45fe11032df07b6a976c216fe
         ]);
     }
 
@@ -118,7 +111,7 @@ class UserController extends Controller
      */
     public function register(Request $request)
     {
-        if(isset($request['email'])) {
+        if (isset($request['email'])) {
             $check_user = User::where('email', $request['email'])->get();
             if ($check_user->count() == 0 && isset($request['password'])) {
                 $request = $request->only('full_name', 'gender', 'date_birth', 'phone_number', 'email', 'password');
@@ -131,11 +124,10 @@ class UserController extends Controller
                     'password' => Hash::make($request['password']),
                 ]);
                 return response()->json([
-                        'success' => true,
-                        'message' => 'Register successful'
+                    'success' => true,
+                    'message' => 'Register successful'
                 ]);
-            }
-            else {
+            } else {
                 return response()->json([
                     'success' => false,
                     'message' => 'Email already exists'
@@ -160,7 +152,7 @@ class UserController extends Controller
             $user->save();
             return response()->json([
                 'success' => true,
-                'message'=> 'Logout successful'
+                'message' => 'Logout successful'
             ]);
         }
         return response()->json([
