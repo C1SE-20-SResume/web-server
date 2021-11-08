@@ -23,7 +23,7 @@ class CreateJobDetailsTable extends Migration
             $table->string('job_place');
             $table->double('salary');
             $table->dateTime('date_expire');
-            $table->float('require_score');
+            $table->float('require_score')->default(0);
             $table->timestamps();
         });
     }
