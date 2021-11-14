@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\JobApplyController;
 use App\Http\Controllers\API\JobDetailController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,19 @@ Route::post('login', [UserController::class, 'login']);
  * @queryParam required: full_name, gender, date_birth, phone_number, email, password
  */
 Route::post('register', [UserController::class, 'register']);
+
+/**
+ * Forget password
+ */
+
+Route::get('forget-password', [ForgotPasswordController::class, 'getEmail'])
+    ->name('forget-password');
+
+/** 
+ * @queryParam required: email
+ */
+Route::post('forget-password', [ForgotPasswordController::class, 'postEmail'])
+    ->name('forget-password');
 
 /**
  * Show all jobs API 
@@ -77,10 +91,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('recruiter/apply/{job_id}', [JobApplyController::class, 'show']);
 
     /**
-    * Add a specific job API 
-    * For page 'Add job' of recruiter
-    * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, job_place, salary, date_expire, job_keyword[keyword, weight]
-    */
+     * Add a specific job API 
+     * For page 'Add job' of recruiter
+     * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, job_place, salary, date_expire, job_keyword[keyword, weight]
+     */
     Route::post('recruiter/job/add', [JobDetailController::class, 'store']);
 
     /**
@@ -105,10 +119,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('recruiter/job/update', [JobDetailController::class, 'update']);
 
     /**
-    * Delete a job  API 
-    * For page 'View job' of recruiter
-    * @queryParam required: api_token
-    */
+     * Delete a job  API 
+     * For page 'View job' of recruiter
+     * @queryParam required: api_token
+     */
     // Route::get('recruiter/job/delete/{job_id}', [JobDetailController::class, 'destroy']);
 
     //---API OF CANDIDATE---

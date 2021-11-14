@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Auth\ResetPasswordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,3 +12,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('reset-password/{token}', [ResetPasswordController::class, 'getPassword'])->name('reset-password');
+Route::post('reset-password', [ResetPasswordController::class, 'updatePassword'])->name('reset-password');
