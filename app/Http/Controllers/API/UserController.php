@@ -21,7 +21,11 @@ class UserController extends Controller
     {
         $this->middleware('auth:api')->except('login', 'register');
     }
-
+    // get auth user
+    public function getUser(Request $request)
+    {
+        return response()->json($request->user());
+    }
     // check if user is logged in by api_token
     public function check()
     {

@@ -9,8 +9,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <link rel="shortcut icon" href='/favicon.png'>
-
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
 </head>
