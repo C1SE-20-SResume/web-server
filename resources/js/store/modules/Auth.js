@@ -43,11 +43,14 @@ export const actions = {
     async getAuthUser({ commit }) {
         try {
             const response = await AuthService.getAuthUser();
-            commit(types.FETCH_USER_SUCCESS, response.data);
-            return response.data;
+            commit(types.FETCH_USER_SUCCESS, response);
+            return response;
         } catch (error) {
             commit(types.FETCH_USER_FAILURE);
         }
+    },
+    setGuest(context, { value }) {
+        window.localStorage.setItem("guest", value);
     },
 };
 

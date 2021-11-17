@@ -4,11 +4,11 @@ const Color = require("color");
 const colors = require("tailwindcss/colors");
 module.exports = {
     darkMode: "class",
-    mode: "jit",
+    // mode: "jit",
     purge: [
+        "./storage/framework/views/*.php",
         "./resources/**/*.blade.php",
-        "./resources/**/*.js",
-        "./resources/**/*.vue",
+        "./resources/**/*.{js,jsx,ts,tsx,vue}",
     ],
     theme: {
         themeVariants: ["dark"],

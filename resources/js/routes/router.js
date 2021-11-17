@@ -6,7 +6,7 @@ const routesWithPrefix = (prefix, routes) => {
 };
 
 import Layout from "../layouts/Layout.vue";
-import { auth } from "../middleware";
+import { auth, guest } from "../middleware";
 import { Dashboard } from "../pages";
 import { Login } from "../auth";
 const routes = [
@@ -15,6 +15,7 @@ const routes = [
         name: "layout",
         meta: {
             middleware: [auth],
+            guard: "auth",
         },
         component: Layout,
         children: [
@@ -29,6 +30,10 @@ const routes = [
         path: "/login",
         name: "login",
         component: Login,
+        meta: {
+            middleware: [guest],
+            guard: "auth",
+        },
     },
     { path: "/:pathMatch(.*)*", redirect: "/" },
 ];

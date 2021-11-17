@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import store from "../store";
 export const authClient = axios.create({
     baseURL: process.env.API_URL,
     withCredentials: true, // required to handle the CSRF token
@@ -46,7 +46,7 @@ export default {
             email,
             password,
         });
-        return response.data;
+        return response;
     },
     getAuthUser() {
         return authClient.get("/api/user");

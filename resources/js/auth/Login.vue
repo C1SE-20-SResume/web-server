@@ -14,17 +14,17 @@
             "
         >
             <div class="flex flex-col overflow-y-auto md:flex-row">
-                <div class="h-32 md:h-auto md:w-1/2">
+                <div class="h-32 md:h-auto md:w-1/2 max-h-[560px]">
                     <img
                         aria-hidden="true"
                         class="object-cover w-full h-full dark:hidden"
-                        src="{{ asset('img/login-office.jpeg') }}"
+                        src="assets/img/login-office.jpeg"
                         alt="Office"
                     />
                     <img
                         aria-hidden="true"
                         class="hidden object-cover w-full h-full dark:block"
-                        src="{{ asset('img/login-office-dark.jpeg') }}"
+                        src="assets/img/login-office-dark.jpeg"
                         alt="Office"
                     />
                 </div>
@@ -98,7 +98,30 @@
                                 required
                             />
                         </label>
-
+                        <!-- remeber -->
+                        <div class="flex items-center mt-6">
+                            <input
+                                v-model="remember"
+                                type="checkbox"
+                                class="
+                                    form-checkbox
+                                    h-4
+                                    w-4
+                                    text-purple-600
+                                    dark:text-gray-300
+                                "
+                            />
+                            <label
+                                for="remember"
+                                class="
+                                    ml-2
+                                    text-sm text-gray-700
+                                    dark:text-gray-200
+                                "
+                            >
+                                Remember me
+                            </label>
+                        </div>
                         <!-- You should use a button here, as the anchor is only used for the example  -->
                         <button
                             type="submit"
@@ -124,7 +147,13 @@
                         >
                             Log in
                         </button>
-
+                        <!-- Log error -->
+                        <div
+                            v-if="error"
+                            class="mt-4 text-sm text-red-600 dark:text-red-200"
+                        >
+                            {{ error }}
+                        </div>
                         <hr class="my-8" />
 
                         <button
@@ -238,24 +267,45 @@
 </template>
 
 <script>
+import AuthService from "../services/AuthService";
 export default {
     data() {
         return {
             email: null,
             password: null,
             error: null,
+            remember: false,
         };
     },
-    created() {},
     methods: {
         async login() {
-            // try {
-            //     const response = await AuthService.login(this.email, this.password);
-            //     Cookies.set("token", response.data.token);
-            //     this.$router.push("/");
-            // } catch (error) {
-            //     this.error = error.response.data.message;
-            // }
+            try {
+                const { data } = await AuthService.login(
+                    this.email,
+                    this.password
+                );
+                if (data.role_level == 2) {
+                    this.$store.dispatch("auth/saveToken", {
+                        token: data.api_token,
+                        remember: this.remember,
+                    });
+                    const authUser = await this.$store.dispatch(
+                        "auth/getAuthUser"
+                    );
+                    if (authUser) {
+                        this.$store.dispatch("auth/setGuest", {
+                            value: "isAdmin",
+                        });
+                        this.$router.push("/");
+                    } else {
+                        console.log("a");
+                    }
+                } else {
+                    this.error = "You are not admin";
+                }
+            } catch (error) {
+                this.error = error.message;
+            }
         },
     },
 };

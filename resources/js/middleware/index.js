@@ -1,3 +1,3 @@
 import auth from "./Auth";
-
-export { auth };
+import guest from "./Guest";
+export { auth, guest };
