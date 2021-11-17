@@ -68,6 +68,11 @@ Route::get('job/{job_id}', [JobDetailController::class, 'show']);
 
 
 Route::group(['middleware' => 'auth:api'], function () {
+
+    /**
+     * Get auth user
+     */
+    Route::get('user', [UserController::class, 'getUser']);
     /**
      * Logout API
      * @queryParam required: api_token

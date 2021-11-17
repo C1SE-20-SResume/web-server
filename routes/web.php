@@ -13,9 +13,9 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 |
 */
 
-// Route::get('{path}', function () {
-//     return view('app');
-// })->where('path', '.*');
+Route::get('/{any}', function () {
+    return view('app');
+})->where('any', '.*');
 
 Route::get('reset-password/{token}', [ResetPasswordController::class, 'getPassword'])->name('reset-password');
 Route::post('reset-password', [ResetPasswordController::class, 'updatePassword'])->name('reset-password');
