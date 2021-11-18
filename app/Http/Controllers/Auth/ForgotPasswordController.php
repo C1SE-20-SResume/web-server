@@ -44,11 +44,14 @@ class ForgotPasswordController extends Controller
         );
 
         // send email with template and token
-        Mail::send('auth.verify', ['token' => $token], function ($m) use ($request) {
-            $m->from($request->email);
+        Mail::send('template.mail.verify', ['token' => $token], function ($m) use ($request) {
+            $m->from(env('MAIL_FROM_NAME'), 'Laravel');
             $m->to($request->email)->subject('Reset Password');
         });
 
-        return response()->json(['message' => 'We have e-mailed your password reset link!']);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'We have e-mailed your password reset link!'
+        ]);
     }
 }

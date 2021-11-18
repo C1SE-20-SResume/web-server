@@ -20,6 +20,24 @@ use thiagoalessio\TesseractOCR\TesseractOCR;
 
 class JobApplyController extends Controller
 {
+    // Get all applied jobs by admin
+    public function getAppliedJobs(Request $request)
+    {
+        // check role of user
+        if ($request->user()->role_level !== 2) {
+            return response()->json([
+                'message' => 'You are not authorized to access this resource.'
+            ], 403);
+        } else {
+            $appliedJobs = JobApply::get();
+            $count = $appliedJobs->count();
+            return response()->json([
+                'appliedJobs' => $appliedJobs,
+                'count' => $count
+            ], 200);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -78,7 +96,7 @@ class JobApplyController extends Controller
         if (isset($request['job_id']) && $request->hasFile('cv_file')) {
             $currentTime = now();
             $job = JobDetail::where('id', $request['job_id'])->first();
-            if($job->date_expire < $currentTime->toDateTimeString()) {
+            if ($job->date_expire < $currentTime->toDateTimeString()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Job has expired',
@@ -86,7 +104,7 @@ class JobApplyController extends Controller
             }
             $user = Auth::user();
             $apply = JobApply::where('job_id', $request['job_id'])->where('user_id', $user->id)->first();
-            if($apply != null) {
+            if ($apply != null) {
                 return response()->json([
                     'success' => false,
                     'message' => 'You have applied for this job',
@@ -143,22 +161,18 @@ class JobApplyController extends Controller
                 if (str_contains($text, $word) == true) {
                     if ($keyword->priority_weight == 1) {
                         $cv_weight = $cv_weight + 0.5;
-                    }
-                    else if ($keyword->priority_weight == 2) {
+                    } else if ($keyword->priority_weight == 2) {
                         $cv_weight = $cv_weight + 1;
-                    } 
-                    else if ($keyword->priority_weight == 3) {
+                    } else if ($keyword->priority_weight == 3) {
                         $cv_weight = $cv_weight + 1.5;
-                    } 
-                    else if ($keyword->priority_weight == 4) {
+                    } else if ($keyword->priority_weight == 4) {
                         $cv_weight = $cv_weight + 2;
-                    } 
-                    else if ($keyword->priority_weight == 5) {
+                    } else if ($keyword->priority_weight == 5) {
                         $cv_weight = $cv_weight + 2.5;
                     }
                 }
             }
-            if ($cv_weight >= $job->require_score) 
+            if ($cv_weight >= $job->require_score)
                 $pass_status = 1;
             else $pass_status = 0;
             JobApply::create([
@@ -198,15 +212,14 @@ class JobApplyController extends Controller
                 $results = $user->result;
                 $apptitude_score = [];
                 $personality_score = [];
-                foreach($results as $result) {
-                    if($result->type_id == 1 || $result->type_id == 2 || $result->type_id == 3) {
+                foreach ($results as $result) {
+                    if ($result->type_id == 1 || $result->type_id == 2 || $result->type_id == 3) {
                         $type = $result->type;
                         $apptitude_score[] = json_decode(json_encode([
                             'type_name' => $type->type_name,
                             'score' => $result->ques_score,
                         ]));
-                    }
-                    else {
+                    } else {
                         $type = $result->type;
                         $personality_score[] = json_decode(json_encode([
                             'type_name' => $type->type_name,
