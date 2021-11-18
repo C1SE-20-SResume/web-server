@@ -51,4 +51,8 @@ export default {
     getAuthUser() {
         return authClient.get("/api/user");
     },
+    async logout() {
+        const response = await authClient.post("/api/logout");
+        return response;
+    },
 };

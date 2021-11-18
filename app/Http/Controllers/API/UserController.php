@@ -149,19 +149,13 @@ class UserController extends Controller
      *
      * @return void
      */
-    public function logout()
+    public function logout(Request $request)
     {
-        if (Auth::check()) {
-            $user = Auth::user();
-            $user->api_token = null;
-            $user->save();
-            return response()->json([
-                'success' => true,
-                'message' => 'Logout successful'
-            ]);
-        }
+        $request->user()->api_token = null;
+        $request->user()->save();
         return response()->json([
-            'success' => false,
+            'success' => true,
+            'message' => 'Logout successful'
         ]);
     }
 }
