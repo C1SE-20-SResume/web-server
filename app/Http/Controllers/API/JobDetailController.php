@@ -77,24 +77,27 @@ class JobDetailController extends Controller
                 'salary' => $request['salary'],
                 'date_expire' => $request['date_expire'],
             ]);
+            // get array job keyword
             $job_keyword = $request['job_keyword'];
+            $job_keyword = json_decode($job_keyword);
             $require_score = 0;
             foreach ($job_keyword as $item) {
-                if ($item['weight'] == 1) {
+                // convert item to object
+                if ($item->weight == 1) {
                     $require_score = $require_score + 0.3;
-                } else if ($item['weight'] == 2) {
+                } else if ($item->weight == 2) {
                     $require_score = $require_score + 0.7;
-                } else if ($item['weight'] == 3) {
+                } else if ($item->weight == 3) {
                     $require_score = $require_score + 1.15;
-                } else if ($item['weight'] == 4) {
+                } else if ($item->weight == 4) {
                     $require_score = $require_score + 1.6;
-                } else if ($item['weight'] == 5) {
+                } else if ($item->weight == 5) {
                     $require_score = $require_score + 2;
                 }
                 JobKeyword::create([
                     'job_id' => $job->id,
-                    'keyword' => $item['keyword'],
-                    'priority_weight' => $item['weight'],
+                    'keyword' => $item->keyword,
+                    'priority_weight' => $item->weight,
                 ]);
             }
             $job->require_score = $require_score;
@@ -102,6 +105,7 @@ class JobDetailController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Add successful',
+                'job' => $job_keyword,
             ]);
         }
         return response()->json([
