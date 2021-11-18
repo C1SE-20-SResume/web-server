@@ -23,7 +23,6 @@
                     md:hidden
                     focus:outline-none focus:shadow-outline-purple
                 "
-                @click=""
                 aria-label="Menu"
             >
                 <svg
@@ -48,6 +47,7 @@
                         max-w-xl
                         mr-6
                         focus-within:text-purple-500
+                        hidden
                     "
                 >
                     <div class="absolute inset-y-0 flex items-center pl-2">
@@ -140,9 +140,15 @@
                             rounded-md
                             focus:outline-none focus:shadow-outline-purple
                         "
-                        @click="noti = !noti"
+                        @click="
+                            {
+                                (noti = !noti), (profile = false);
+                            }
+                        "
                         aria-label="Notifications"
                         aria-haspopup="true"
+                        id="noti-btn"
+                        v-click-outside="closeNoti"
                     >
                         <svg
                             class="w-5 h-5"
@@ -174,7 +180,14 @@
                             "
                         ></span>
                     </button>
-                    <template v-if="noti">
+                    <transition
+                        enter-active-class="transition ease-in duration-300"
+                        enter-from-class="opacity-0 translate-y-1"
+                        enter-to-class="opacity-100 translate-y-0"
+                        leave-active-class="transition ease-in duration-200"
+                        leave-from-class="opacity-100"
+                        leave-to-class="opacity-0"
+                    >
                         <ul
                             leave-active-class="transition ease-in duration-150"
                             leave-from-class="opacity-100"
@@ -194,7 +207,9 @@
                                 dark:text-gray-300
                                 dark:border-gray-700
                                 dark:bg-gray-700
+                                transform
                             "
+                            v-show="noti"
                         >
                             <li class="flex">
                                 <a
@@ -302,7 +317,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </template>
+                    </transition>
                 </li>
                 <!-- Profile menu -->
                 <li class="relative">
@@ -312,9 +327,14 @@
                             rounded-full
                             focus:shadow-outline-purple focus:outline-none
                         "
-                        @click="profile = !profile"
+                        @click="
+                            {
+                                (profile = !profile), (noti = false);
+                            }
+                        "
                         aria-label="Account"
                         aria-haspopup="true"
+                        v-click-outside="closeProfile"
                     >
                         <img
                             class="object-cover w-8 h-8 rounded-full"
@@ -323,11 +343,16 @@
                             aria-hidden="true"
                         />
                     </button>
-                    <template v-if="profile">
+                    <transition
+                        enter-active-class="transition ease-in duration-300"
+                        enter-from-class="opacity-0 translate-y-1"
+                        enter-to-class="opacity-100 translate-y-0"
+                        leave-active-class="transition ease-in duration-200"
+                        leave-from-class="opacity-100"
+                        leave-to-class="opacity-0"
+                    >
                         <ul
-                            leave-active-class="transition ease-in duration-150"
-                            leave-from-class="opacity-100"
-                            leave-to-class="opacity-0"
+                            v-show="profile"
                             class="
                                 absolute
                                 right-0
@@ -343,6 +368,7 @@
                                 dark:border-gray-700
                                 dark:text-gray-300
                                 dark:bg-gray-700
+                                transform
                             "
                             aria-label="submenu"
                         >
@@ -459,7 +485,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </template>
+                    </transition>
                 </li>
             </ul>
         </div>
@@ -480,6 +506,7 @@ export default {
             .getElementsByTagName("html")[0]
             .classList.toggle("dark", this.dark);
     },
+    mounted() {},
     methods: {
         setThemeToLocalStorage(value) {
             window.localStorage.setItem("dark", value);
@@ -503,6 +530,12 @@ export default {
         logout() {
             this.$store.dispatch("auth/logout");
             window.location.reload();
+        },
+        closeNoti() {
+            this.noti = false;
+        },
+        closeProfile() {
+            this.profile = false;
         },
     },
 };

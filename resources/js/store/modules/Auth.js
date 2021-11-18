@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import AuthService from "../../services/AuthService.js";
+import { AuthService } from "../../services";
 import * as types from "../mutation-types";
 
 export const namespaced = true;
