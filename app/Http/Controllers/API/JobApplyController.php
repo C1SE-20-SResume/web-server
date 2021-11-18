@@ -9,6 +9,7 @@ use App\Models\JobKeyword;
 use App\Models\JobDetail;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\QuestionResult;
 
 /*
 * Import scan file class
@@ -94,6 +95,7 @@ class JobApplyController extends Controller
     {
         // $request = $request->only('user_id', 'job_id', 'cv_file');
         if (isset($request['job_id']) && $request->hasFile('cv_file')) {
+            // Check job has expired or not
             $currentTime = now();
             $job = JobDetail::where('id', $request['job_id'])->first();
             if ($job->date_expire < $currentTime->toDateTimeString()) {
@@ -102,6 +104,7 @@ class JobApplyController extends Controller
                     'message' => 'Job has expired',
                 ]);
             }
+            // Check candidate have applied or not
             $user = Auth::user();
             $apply = JobApply::where('job_id', $request['job_id'])->where('user_id', $user->id)->first();
             if ($apply != null) {
@@ -110,6 +113,21 @@ class JobApplyController extends Controller
                     'message' => 'You have applied for this job',
                 ]);
             }
+            // Check candidate have done both quizzes or not
+            $results = QuestionResult::select('type_id')->where('user_id', $user->id)->get();
+            $types = [];
+            if(count($results) >0) {
+                foreach($results as $result) {
+                    $types[] = $result->type_id;
+                }
+            }
+            if(count(array_diff([1,2,3,4,5,6,7,8], $types)) >0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You have not done both types of quizzes',
+                ]);
+            }
+            // Save cv file
             $request->validate([
                 'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
             ]);
@@ -119,6 +137,7 @@ class JobApplyController extends Controller
             $fileNameToStore = time() . uniqid() . '_' . $filename . '.' . $extension;
             $request->file('cv_file')->move('cv_uploads', $fileNameToStore);
             $filePath = 'cv_uploads/' . $fileNameToStore;
+            // $filePath = 'cv_uploads/NguyenNgocThanh_CV_Full_1635460356.pdf';
             $text = "";
             $mimetype = $request->file('cv_file')->getClientMimeType();
             // PDF files
@@ -154,6 +173,7 @@ class JobApplyController extends Controller
             // $text = Str::lower($text); utf-8
             $text = strtolower($text);
             $keywords = JobKeyword::where('job_id', $request['job_id'])->get();
+            // Score for cv file
             $cv_weight = 0;
             foreach ($keywords as $keyword) {
                 $word = strtolower($keyword->keyword);
@@ -172,9 +192,11 @@ class JobApplyController extends Controller
                     }
                 }
             }
+            // Check scan score of cv file is pass or not
             if ($cv_weight >= $job->require_score)
                 $pass_status = 1;
             else $pass_status = 0;
+            // Save into database
             JobApply::create([
                 'user_id' => $user->id,
                 'job_id' => $request['job_id'],
@@ -182,11 +204,18 @@ class JobApplyController extends Controller
                 'cv_score' => $cv_weight,
                 'pass_status' => $pass_status,
             ]);
+            // Ranking scan score for candidate's apply
+            $ranks = JobApply::query()
+                ->selectRaw('user_id, RANK() OVER (ORDER BY cv_score DESC) AS rank')
+                ->where('job_id', $request['job_id'])
+                ->groupBy('user_id')
+                ->get();
             return response()->json([
                 'success' => true,
                 'require_score' => $job->require_score,
                 'cv_score' => $cv_weight,
                 'cv_pass' => $pass_status,
+                'rank' => $ranks->where('user_id', $user->id)->first()->rank,
             ]);
         }
         return response()->json([
