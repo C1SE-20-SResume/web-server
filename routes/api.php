@@ -77,7 +77,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      * Logout API
      * @queryParam required: api_token
      */
-    Route::get('logout', [UserController::class, 'logout']);
+    Route::post('logout', [UserController::class, 'logout']);
 
     //---API OF RECRUITER---
 

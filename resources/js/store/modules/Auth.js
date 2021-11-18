@@ -52,6 +52,10 @@ export const actions = {
     setGuest(context, { value }) {
         window.localStorage.setItem("guest", value);
     },
+    async logout({ commit }) {
+        await AuthService.logout();
+        commit(types.LOGOUT);
+    },
 };
 
 export const getters = {

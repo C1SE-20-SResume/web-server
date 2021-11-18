@@ -140,8 +140,7 @@
                             rounded-md
                             focus:outline-none focus:shadow-outline-purple
                         "
-                        @click=""
-                        @keydown.escape=""
+                        @click="noti = !noti"
                         aria-label="Notifications"
                         aria-haspopup="true"
                     >
@@ -175,12 +174,11 @@
                             "
                         ></span>
                     </button>
-                    <template>
+                    <template v-if="noti">
                         <ul
                             leave-active-class="transition ease-in duration-150"
                             leave-from-class="opacity-100"
                             leave-to-class="opacity-0"
-                            @keydown.esce=""
                             class="
                                 absolute
                                 right-0
@@ -314,8 +312,7 @@
                             rounded-full
                             focus:shadow-outline-purple focus:outline-none
                         "
-                        @click=""
-                        @keydown.esc=""
+                        @click="profile = !profile"
                         aria-label="Account"
                         aria-haspopup="true"
                     >
@@ -326,12 +323,11 @@
                             aria-hidden="true"
                         />
                     </button>
-                    <template>
+                    <template v-if="profile">
                         <ul
                             leave-active-class="transition ease-in duration-150"
                             leave-from-class="opacity-100"
                             leave-to-class="opacity-0"
-                            @keydown.esc=""
                             class="
                                 absolute
                                 right-0
@@ -427,7 +423,7 @@
                             </li>
                             <li class="flex">
                                 <a
-                                    @click=""
+                                    @click="logout"
                                     class="
                                         inline-flex
                                         items-center
@@ -475,6 +471,8 @@ export default {
     data() {
         return {
             dark: this.getThemeFromLocalStorage(),
+            noti: false,
+            profile: false,
         };
     },
     created() {
@@ -490,11 +488,9 @@ export default {
                 .classList.toggle("dark", value);
         },
         getThemeFromLocalStorage() {
-            // if user already changed the theme, use it
             if (window.localStorage.getItem("dark")) {
                 return JSON.parse(window.localStorage.getItem("dark"));
             }
-            // else return their preferences
             return (
                 !!window.matchMedia &&
                 window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -503,6 +499,10 @@ export default {
         toggleTheme() {
             this.dark = !this.dark;
             this.setThemeToLocalStorage(this.dark);
+        },
+        logout() {
+            this.$store.dispatch("auth/logout");
+            window.location.reload();
         },
     },
 };
