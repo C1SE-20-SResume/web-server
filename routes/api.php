@@ -66,6 +66,12 @@ Route::get('job', [JobDetailController::class, 'index']);
  */
 Route::get('job/{job_id}', [JobDetailController::class, 'show']);
 
+/**
+ * Show 5 jobs which had highest number of applies API 
+ * For page 'Home page' website
+ */
+Route::get('popularjob', [JobDetailController::class, 'homepage']);
+
 
 Route::group(['middleware' => 'auth:api'], function () {
 
