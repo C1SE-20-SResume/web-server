@@ -70,7 +70,8 @@ Route::get('job/{job_id}', [JobDetailController::class, 'show']);
 Route::group(['middleware' => 'auth:api'], function () {
 
     /**
-     * Get auth user
+     * Get auth user current 
+     * @queryParam required: api_token
      */
     Route::get('user', [UserController::class, 'getUser']);
     /**
@@ -138,4 +139,8 @@ Route::group(['middleware' => 'auth:api'], function () {
      * @queryParam required: api_token, job_id, cv_file
      */
     Route::post('candidate/job/upload', [JobApplyController::class, 'store']);
+
+
+    //---API OF ADMIN---
+    Route::get('admin/job_applies', [JobApplyController::class, 'getAppliedJobs']);
 });

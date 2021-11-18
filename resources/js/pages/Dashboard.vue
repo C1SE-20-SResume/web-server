@@ -38,13 +38,18 @@
                         "
                     >
                         <svg
-                            class="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
                         >
                             <path
-                                d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"
-                            ></path>
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                            />
                         </svg>
                     </div>
                     <div>
@@ -57,7 +62,7 @@
                                 dark:text-gray-400
                             "
                         >
-                            Total clients
+                            Total job
                         </p>
                         <p
                             class="
@@ -67,7 +72,7 @@
                                 dark:text-gray-200
                             "
                         >
-                            6389
+                            {{ jobs.countOfJobs }}
                         </p>
                     </div>
                 </div>
@@ -94,15 +99,18 @@
                         "
                     >
                         <svg
-                            class="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
                         >
                             <path
-                                fill-rule="evenodd"
-                                d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                                clip-rule="evenodd"
-                            ></path>
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                            />
                         </svg>
                     </div>
                     <div>
@@ -115,7 +123,7 @@
                                 dark:text-gray-400
                             "
                         >
-                            Account balance
+                            Total Applied
                         </p>
                         <p
                             class="
@@ -125,7 +133,7 @@
                                 dark:text-gray-200
                             "
                         >
-                            $ 46,760.89
+                            {{ appliedJobs.count }}
                         </p>
                     </div>
                 </div>
@@ -1230,5 +1238,22 @@
 </template>
 
 <script>
-export default {};
+import { JobService } from "../services";
+export default {
+    data() {
+        return {
+            jobs: [],
+            appliedJobs: [],
+        };
+    },
+    mounted() {
+        JobService.getAllJob().then((jobs) => {
+            this.jobs = jobs.data;
+        });
+        JobService.getAllAppliedJob().then((appliedJobs) => {
+            this.appliedJobs = appliedJobs.data;
+        });
+    },
+    methods: {},
+};
 </script>
