@@ -67,12 +67,17 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserCompany::class);
     }
-
+    /**
+     * Check if Admin
+     */
+    public function isAdmin()
+    {
+        return $this->role_level === 2;
+    }
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [
-    ];
+    protected $casts = [];
 }
