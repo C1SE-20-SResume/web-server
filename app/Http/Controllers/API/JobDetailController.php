@@ -106,7 +106,7 @@ class JobDetailController extends Controller
             $job->save();
             return response()->json([
                 'success' => true,
-                'message' => 'Add successful',
+                'message' => 'Add job successful',
                 'job' => $job_keyword,
             ]);
         }

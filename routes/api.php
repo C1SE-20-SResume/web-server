@@ -7,6 +7,7 @@ use App\Http\Controllers\API\JobApplyController;
 use App\Http\Controllers\API\JobDetailController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\API\AdminController;
+use App\Http\Controllers\API\QuestionDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -137,6 +138,14 @@ Route::group(['middleware' => 'auth:api'], function () {
      * @queryParam required: api_token
      */
     // Route::get('recruiter/job/delete/{job_id}', [JobDetailController::class, 'destroy']);
+
+    /**
+     * Add a specific question API 
+     * For page 'Add question' of recruiter
+     * @queryParam required: api_token, type_id, ques_content, ques_option[opt_content, correct]
+     * Notes: 'type_id' in table 'question_types', if apptitude question (type_id is 1,2,3) then param 'ques_option' must have, if option correct is 1 else 0
+     */
+    Route::post('recruiter/ques/add', [QuestionDetailController::class, 'store']);
 
     //---API OF CANDIDATE---
 
