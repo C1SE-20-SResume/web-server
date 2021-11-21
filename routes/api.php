@@ -178,4 +178,6 @@ Route::group(['middleware' => 'auth:api'], function () {
      * @queryParam required: api_token
      */
     Route::get('admin/listUser', [AdminController::class, 'listUser']);
+
+    // Route::get('admin/listUser', [AdminController::class, 'listUser']);
 });
