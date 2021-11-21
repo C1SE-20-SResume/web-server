@@ -495,9 +495,12 @@
                         Job and aplly
                     </h4>
                     <div>
-                        <Chart
-                            :alljob="{ ...jobs }"
-                            :allapplied="{ ...appliedJobs }"
+                        <!-- chart -->
+                        <BarChart
+                            v-if="loaded"
+                            :jobs="{ ...jobs }"
+                            :applied="{ ...appliedJobs }"
+                            :listUser="{ ...listUser }"
                         />
                     </div>
                 </div>
@@ -567,34 +570,36 @@
 </template>
 
 <script>
-import { JobService } from "../services";
-import Chart from "../components/Chart.vue";
-
+import BarChart from "../components/Chart.vue";
 export default {
     data() {
         return {
             jobs: {},
             appliedJobs: {},
+            listUser: null,
             limit: 10,
             minShow: 1,
             maxShow: 10,
             currentPage: 1,
+            loaded: false,
         };
     },
 
-    mounted() {
-        JobService.getAllJob()
-            .then((jobs) => jobs.data)
-            .then((jobs) => {
-                this.jobs = jobs;
-            });
-        JobService.getAllAppliedJob()
-            .then((appliedJobs) => {
-                this.appliedJobs = appliedJobs.data;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    async mounted() {
+        this.loaded = false;
+        try {
+            const jobs = await this.$store.dispatch("job/getAllJob");
+            const appliedJobs = await this.$store.dispatch(
+                "job/getAppliedJobs"
+            );
+            const listUser = await this.$store.dispatch("auth/listUsers");
+            this.listUser = listUser;
+            this.jobs = jobs;
+            this.appliedJobs = appliedJobs;
+            this.loaded = true;
+        } catch (error) {
+            console.error(error);
+        }
     },
     methods: {
         showMore() {
@@ -618,7 +623,7 @@ export default {
         },
     },
     components: {
-        Chart,
+        BarChart,
     },
 };
 </script>

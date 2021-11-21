@@ -162,4 +162,11 @@ Route::group(['middleware' => 'auth:api'], function () {
      * @queryParam required: api_token
      */
     Route::get('admin/listJob', [AdminController::class, 'listJob']);
+
+    /**
+     * Total users 
+     * only Admin
+     * @queryParam required: api_token
+     */
+    Route::get('admin/listUser', [AdminController::class, 'listUser']);
 });

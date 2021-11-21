@@ -1,63 +1,46 @@
 <template>
-    <Vue3ChartJs
-        :id="jobChart.id"
-        :type="jobChart.type"
-        :data="jobChart.data"
-        :options="jobChart.options"
-        @after-render="afterRenderLogic"
-    >
-    </Vue3ChartJs>
+    <div>
+        <BarChart v-bind="barChartProps" />
+    </div>
 </template>
 
 <script>
-import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
-export default {
-    props: {
-        alljob: {
-            type: Object,
-            required: true,
-        },
-        allapplied: {
-            type: Object,
-            required: true,
-        },
-    },
-    data() {
-        const jobChart = {
-            id: "jobChart",
-            type: "bar",
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                scales: {},
-            },
-            data: {
-                labels: ["Chart follow job and aplly"],
-                datasets: [
-                    {
-                        label: ["Job"],
-                        backgroundColor: ["#1abc9c"],
-                        data: [this.alljob.count],
-                    },
-                    {
-                        label: "Aplly",
-                        backgroundColor: ["#f1c40f"],
-                        data: [this.allapplied.count],
-                    },
-                ],
-            },
-        };
+// import ref
+import { computed } from "vue";
+import { Chart, registerables } from "chart.js";
+import { BarChart, useBarChart } from "vue-chart-3";
 
-        const afterRenderLogic = (event) => {};
+Chart.register(...registerables);
+export default {
+    props: ["jobs", "applied", "listUser"],
+    data() {
+        const chartData = computed(() => ({
+            labels: ["Test"],
+            datasets: [
+                {
+                    label: ["Applied"],
+                    data: [this.applied.count],
+                    backgroundColor: ["#77CEFF"],
+                },
+                {
+                    label: ["Jobs"],
+                    data: [this.jobs.count],
+                    backgroundColor: ["#0079AF"],
+                },
+            ],
+        }));
+
+        const { barChartProps, barChartRef } = useBarChart({
+            chartData,
+        });
         return {
-            jobChart: jobChart,
-            afterRenderLogic: afterRenderLogic,
+            barChartProps,
+            barChartRef,
         };
     },
-    name: "Chart",
-    mounted() {},
     components: {
-        Vue3ChartJs,
+        BarChart,
     },
+    mounted() {},
 };
 </script>

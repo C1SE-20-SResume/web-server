@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Models\JobDetail;
 use App\Models\UserCompany;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -44,6 +45,26 @@ class AdminController extends Controller
             return response()->json([
                 'message' => 'Success',
                 'data' => $list_job,
+                'count' => $count
+            ], 200);
+        }
+    }
+    /**
+     * List user from user table
+     * only Admin can access this function
+     */
+    public function listUser(Request $request)
+    {
+        if (!$request->user()->isAdmin()) {
+            return response()->json([
+                'message' => 'You are not admin'
+            ], 403);
+        } else {
+            $list_user = User::all();
+            $count = $list_user->count();
+            return response()->json([
+                'message' => 'Success',
+                'data' => $list_user,
                 'count' => $count
             ], 200);
         }
