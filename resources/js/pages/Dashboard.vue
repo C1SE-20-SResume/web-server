@@ -137,120 +137,6 @@
                         </p>
                     </div>
                 </div>
-                <!-- Card -->
-                <div
-                    class="
-                        flex
-                        items-center
-                        p-4
-                        bg-white
-                        rounded-lg
-                        shadow-xs
-                        dark:bg-gray-800
-                    "
-                >
-                    <div
-                        class="
-                            p-3
-                            mr-4
-                            text-blue-500
-                            bg-blue-100
-                            rounded-full
-                            dark:text-blue-100 dark:bg-blue-500
-                        "
-                    >
-                        <svg
-                            class="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
-                            ></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <p
-                            class="
-                                mb-2
-                                text-sm
-                                font-medium
-                                text-gray-600
-                                dark:text-gray-400
-                            "
-                        >
-                            New sales
-                        </p>
-                        <p
-                            class="
-                                text-lg
-                                font-semibold
-                                text-gray-700
-                                dark:text-gray-200
-                            "
-                        >
-                            376
-                        </p>
-                    </div>
-                </div>
-                <!-- Card -->
-                <div
-                    class="
-                        flex
-                        items-center
-                        p-4
-                        bg-white
-                        rounded-lg
-                        shadow-xs
-                        dark:bg-gray-800
-                    "
-                >
-                    <div
-                        class="
-                            p-3
-                            mr-4
-                            text-teal-500
-                            bg-teal-100
-                            rounded-full
-                            dark:text-teal-100 dark:bg-teal-500
-                        "
-                    >
-                        <svg
-                            class="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
-                                clip-rule="evenodd"
-                            ></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <p
-                            class="
-                                mb-2
-                                text-sm
-                                font-medium
-                                text-gray-600
-                                dark:text-gray-400
-                            "
-                        >
-                            Pending contacts
-                        </p>
-                        <p
-                            class="
-                                text-lg
-                                font-semibold
-                                text-gray-700
-                                dark:text-gray-200
-                            "
-                        >
-                            35
-                        </p>
-                    </div>
-                </div>
             </div>
             <!-- New Table -->
             <div class="w-full overflow-hidden rounded-lg shadow-xs">
@@ -291,54 +177,71 @@
                                     "
                                 >
                                     <td class="px-4 py-3">
-                                        <div class="flex items-center text-sm">
-                                            <!-- Avatar with inset shadow -->
+                                        <router-link
+                                            :to="{
+                                                name: 'single-job',
+                                                params: {
+                                                    id: item.id,
+                                                },
+                                            }"
+                                            class="w-full block"
+                                        >
                                             <div
                                                 class="
-                                                    relative
-                                                    hidden
-                                                    w-8
-                                                    h-8
-                                                    mr-3
-                                                    rounded-full
-                                                    md:block
+                                                    flex
+                                                    items-center
+                                                    text-sm
                                                 "
                                             >
-                                                <img
-                                                    class="
-                                                        object-cover
-                                                        w-full
-                                                        h-full
-                                                        rounded-full
-                                                    "
-                                                    :src="item.logo"
-                                                    :alt="item.company_name"
-                                                    loading="lazy"
-                                                />
+                                                <!-- Avatar with inset shadow -->
                                                 <div
                                                     class="
-                                                        absolute
-                                                        inset-0
+                                                        relative
+                                                        hidden
+                                                        w-8
+                                                        h-8
+                                                        mr-3
                                                         rounded-full
-                                                        shadow-inner
-                                                    "
-                                                    aria-hidden="true"
-                                                ></div>
-                                            </div>
-                                            <div>
-                                                <p class="font-semibold">
-                                                    {{ item.company_name }}
-                                                </p>
-                                                <p
-                                                    class="
-                                                        text-xs text-gray-600
-                                                        dark:text-gray-400
+                                                        md:block
                                                     "
                                                 >
-                                                    {{ item.job_place }}
-                                                </p>
+                                                    <img
+                                                        class="
+                                                            object-cover
+                                                            w-full
+                                                            h-full
+                                                            rounded-full
+                                                        "
+                                                        :src="item.logo"
+                                                        :alt="item.company_name"
+                                                        loading="lazy"
+                                                    />
+                                                    <div
+                                                        class="
+                                                            absolute
+                                                            inset-0
+                                                            rounded-full
+                                                            shadow-inner
+                                                        "
+                                                        aria-hidden="true"
+                                                    ></div>
+                                                </div>
+                                                <div>
+                                                    <p class="font-semibold">
+                                                        {{ item.company_name }}
+                                                    </p>
+                                                    <p
+                                                        class="
+                                                            text-xs
+                                                            text-gray-600
+                                                            dark:text-gray-400
+                                                        "
+                                                    >
+                                                        {{ item.job_place }}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </router-link>
                                     </td>
                                     <td class="px-4 py-3 text-sm">
                                         {{ item.job_title }}
@@ -502,66 +405,6 @@
                             :applied="{ ...appliedJobs }"
                             :listUser="{ ...listUser }"
                         />
-                    </div>
-                </div>
-                <div
-                    class="
-                        min-w-0
-                        p-4
-                        bg-white
-                        rounded-lg
-                        shadow-xs
-                        dark:bg-gray-800
-                    "
-                >
-                    <h4
-                        class="
-                            mb-4
-                            font-semibold
-                            text-gray-800
-                            dark:text-gray-300
-                        "
-                    >
-                        Traffic
-                    </h4>
-                    <canvas id="line"></canvas>
-                    <div
-                        class="
-                            flex
-                            justify-center
-                            mt-4
-                            space-x-3
-                            text-sm text-gray-600
-                            dark:text-gray-400
-                        "
-                    >
-                        <!-- Chart legend -->
-                        <div class="flex items-center">
-                            <span
-                                class="
-                                    inline-block
-                                    w-3
-                                    h-3
-                                    mr-1
-                                    bg-teal-600
-                                    rounded-full
-                                "
-                            ></span>
-                            <span>Organic</span>
-                        </div>
-                        <div class="flex items-center">
-                            <span
-                                class="
-                                    inline-block
-                                    w-3
-                                    h-3
-                                    mr-1
-                                    bg-purple-600
-                                    rounded-full
-                                "
-                            ></span>
-                            <span>Paid</span>
-                        </div>
                     </div>
                 </div>
             </div>

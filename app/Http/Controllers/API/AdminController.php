@@ -8,6 +8,7 @@ use App\Models\Admin;
 use App\Models\JobDetail;
 use App\Models\UserCompany;
 use App\Models\User;
+use App\Models\JobApply;
 
 class AdminController extends Controller
 {
@@ -68,5 +69,29 @@ class AdminController extends Controller
                 'count' => $count
             ], 200);
         }
+    }
+    /**
+     * Single job by id
+     * only Admin can access this function
+     */
+    public function getJob(Request $request, $id)
+    {
+        if ($request->user()->isAdmin()) {
+            // get job detail and number of apply
+            $job = JobDetail::where('id', $id)->first();
+            $job->number_apply = JobApply::where('job_id', $id)->count();
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $job
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'You are not admin'
+            ], 403);
+        }
+        return response()->json([
+            'message' => 'You are not admin'
+        ], 403);
     }
 }

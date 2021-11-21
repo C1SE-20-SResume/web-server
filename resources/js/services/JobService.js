@@ -40,9 +40,12 @@ authClient.interceptors.response.use(
 
 export default {
     async getAllJob() {
-        return authClient.get("api/admin/listJob");
+        return authClient.get("/api/admin/listJob");
     },
     async getAllAppliedJob() {
-        return authClient.get("api/admin/job_applies");
+        return authClient.get("/api/admin/job_applies");
+    },
+    async getJob(id) {
+        return authClient.get(`/api/admin/job/${id}`);
     },
 };

@@ -179,5 +179,10 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::get('admin/listUser', [AdminController::class, 'listUser']);
 
-    // Route::get('admin/listUser', [AdminController::class, 'listUser']);
+    /**
+     * Single job by id
+     * only Admin
+     * @queryParam required: api_token, job_id
+     */
+    Route::get('admin/job/{job_id}', [AdminController::class, 'getJob']);
 });
