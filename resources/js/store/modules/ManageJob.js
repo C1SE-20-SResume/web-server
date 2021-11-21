@@ -18,7 +18,8 @@ export const actions = {
     async getAllJob({ commit }) {
         try {
             const response = await JobService.getAllJob();
-            commit(types.DATA_ALL_JOB, response);
+            // commit(types.DATA_ALL_JOB, response.data);
+            return response.data;
         } catch (error) {
             console.log(error);
         }

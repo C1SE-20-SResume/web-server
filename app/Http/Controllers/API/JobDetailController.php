@@ -8,6 +8,8 @@ use App\Models\JobDetail;
 use App\Models\JobKeyword;
 use Carbon\Carbon;
 use Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\JobApply;
 
 class JobDetailController extends Controller
 {
@@ -40,8 +42,8 @@ class JobDetailController extends Controller
         $countOfJobs = count($data);
         return response()->json([
             'success' => true,
-            'data' => $data,
             'countOfJobs' => $countOfJobs,
+            'data' => $data,
         ]);
     }
 
@@ -283,6 +285,42 @@ class JobDetailController extends Controller
         JobDetail::destroy($job_id);
         return response()->json([
             'status' => true,
+        ]);
+    }
+
+    /**
+     * Display a listing of job which had highest number of applies.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function homepage()
+    {
+        $currentTime = now();
+        $jobs = JobDetail::where('date_expire', '>=', $currentTime->toDateTimeString())
+            ->withCount('apply')
+            ->orderBy('apply_count', 'desc')
+            ->limit(5)
+            ->get();
+        $data = [];
+        foreach ($jobs as $job) {
+            $company = $job->company;
+            $data[] = json_decode(json_encode([
+                'job_id' => $job->id,
+                'company_name' => $company->company_name,
+                'logo_url' => $company->logo_url,
+                'job_title' => $job->job_title,
+                'job_place' => $job->job_place,
+                'salary' => $job->salary,
+                'date_expire' => $job->date_expire,
+                'created_at' => $job->created_at->toDateTimeString(),
+                'updated_at' => $job->updated_at->toDateTimeString(),
+            ]));
+        }
+        $countOfJobs = count($data);
+        return response()->json([
+            'success' => true,
+            'countOfJobs' => $countOfJobs,
+            'data' => $data,
         ]);
     }
 }

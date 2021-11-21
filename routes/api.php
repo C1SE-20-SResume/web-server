@@ -6,6 +6,7 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\JobApplyController;
 use App\Http\Controllers\API\JobDetailController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\API\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,12 @@ Route::get('job', [JobDetailController::class, 'index']);
  * for 'Job Details' when click a specific job in page 'View job'
  */
 Route::get('job/{job_id}', [JobDetailController::class, 'show']);
+
+/**
+ * Show 5 jobs which had highest number of applies API 
+ * For page 'Home page' website
+ */
+Route::get('popularjob', [JobDetailController::class, 'homepage']);
 
 
 Route::group(['middleware' => 'auth:api'], function () {
@@ -142,5 +149,17 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     //---API OF ADMIN---
+    /** 
+     * Total apply of all jobs API
+     * only Admin
+     * @queryParam required: api_token
+     */
     Route::get('admin/job_applies', [JobApplyController::class, 'getAppliedJobs']);
+
+    /**
+     * Total job of all companies API
+     * only Admin
+     * @queryParam required: api_token
+     */
+    Route::get('admin/listJob', [AdminController::class, 'listJob']);
 });
