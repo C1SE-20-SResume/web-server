@@ -4,11 +4,12 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Admin;
 use App\Models\JobDetail;
 use App\Models\UserCompany;
 use App\Models\User;
 use App\Models\JobApply;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -17,11 +18,33 @@ class AdminController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
+    // public function __construct()
+    // {
+    //     // only admin can access this controller
+    //     $this->middleware('auth:api');
+    //     // check if user is admin
+    //     $this->middleware('admin:api');
+    // }
 
+    public function loginAdmin(Request $request)
+    {
+        // check if isAdmin
+        $user = User::where('email', $request->email)->first();
+
+        if ($user->isAdmin() && Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+            $api_token = Str::random(60);
+            $user->api_token = $api_token;
+            $user->save();
+            return response()->json([
+                'message' => 'Admin login successfully',
+                'api_token' => $api_token,
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'You are not admin'
+            ], 401);
+        }
+    }
     /** 
      * Get list job from job_detail table
      * 

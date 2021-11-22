@@ -186,3 +186,8 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::get('admin/job/{job_id}', [AdminController::class, 'getJob']);
 });
+/**
+ * Login only Admin
+ * @queryParam required: email, password
+ */
+Route::post('/adminLogin', [AdminController::class, 'loginAdmin']);
