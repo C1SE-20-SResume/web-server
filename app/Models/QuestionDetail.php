@@ -32,7 +32,7 @@ class QuestionDetail extends Model
      */
     public function option()
     {
-        return $this->hasMany(QuestionOption::class);
+        return $this->hasMany(QuestionOption::class, 'ques_id');
     }
 
     /**
