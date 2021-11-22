@@ -53,6 +53,72 @@
                         <span class="ml-4">Dashboard</span>
                     </router-link>
                 </li>
+                <li class="relative px-6 py-3">
+                    <router-link
+                        :to="{ name: 'list-company' }"
+                        class="
+                            inline-flex
+                            items-center
+                            w-full
+                            text-sm
+                            font-semibold
+                            transition-colors
+                            duration-150
+                            hover:text-gray-800
+                            dark:hover:text-gray-200
+                        "
+                        exactActive-class="active text-gray-800 dark:text-gray-100"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                            />
+                        </svg>
+                        <span class="ml-4">List Company</span>
+                    </router-link>
+                </li>
+                <li class="relative px-6 py-3">
+                    <router-link
+                        :to="{ name: 'list-question' }"
+                        class="
+                            inline-flex
+                            items-center
+                            w-full
+                            text-sm
+                            font-semibold
+                            transition-colors
+                            duration-150
+                            hover:text-gray-800
+                            dark:hover:text-gray-200
+                        "
+                        exactActive-class="active text-gray-800 dark:text-gray-100"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        <span class="ml-4">List Question</span>
+                    </router-link>
+                </li>
             </ul>
             <ul>
                 <!-- <li class="relative px-6 py-3">

@@ -40,6 +40,22 @@ export const actions = {
             console.log(error);
         }
     },
+    async getListCompany({ commit }) {
+        try {
+            const response = await JobService.getListCompany();
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    async getListQuestion({ commit }) {
+        try {
+            const response = await JobService.getListQuestion();
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    },
 };
 
 export const getters = {
