@@ -167,13 +167,7 @@ class AdminController extends Controller
         } else {
             $data = [];
             $list_company = UserCompany::all();
-<<<<<<< HEAD
             foreach ($list_company as $company) {
-                // fix format datetime of json return, but not yet
-                $company->created_at = $company->created_at->toDateTimeString();
-                $company->updated_at = $company->updated_at->toDateTimeString();
-=======
-            foreach($list_company as $company){
                 $data[] = json_decode(json_encode([
                     'company_id' => $company->id,
                     'company_name' => $company->company_name,
@@ -182,7 +176,6 @@ class AdminController extends Controller
                     'created_at' => $company->created_at->toDateTimeString(),
                     'updated_at' => $company->updated_at->toDateTimeString(),
                 ]));
->>>>>>> 55152b971ceaf0fdd34bcafbec40658cb1bbdcad
             }
             $count = $list_company->count();
             return response()->json([
