@@ -88,8 +88,8 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::post('logout', [UserController::class, 'logout']);
 
-    //---API OF RECRUITER---
 
+    //---API OF RECRUITER---
     /**
      * Show summarizes the number of applies for each job API
      * for page 'Home' of recruiter
@@ -147,8 +147,8 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::post('recruiter/ques/add', [QuestionDetailController::class, 'store']);
 
-    //---API OF CANDIDATE---
 
+    //---API OF CANDIDATE---
     /**
      * Upload a specific CV file (.pdf) and return result API 
      * For page 'Job details' of candidate
@@ -185,9 +185,18 @@ Route::group(['middleware' => 'auth:api'], function () {
      * @queryParam required: api_token, job_id
      */
     Route::get('admin/job/{job_id}', [AdminController::class, 'getJob']);
+
+    /**
+     * Total companies
+     * only Admin
+     * @queryParam required: api_token
+     */
+    Route::get('admin/listCompany', [AdminController::class, 'listCompany']);
+
+    /**
+     * Total questions
+     * only Admin
+     * @queryParam required: api_token
+     */
+    Route::get('admin/listQuestion', [AdminController::class, 'listQuestion']);
 });
-/**
- * Login only Admin
- * @queryParam required: email, password
- */
-Route::post('/adminLogin', [AdminController::class, 'loginAdmin']);
