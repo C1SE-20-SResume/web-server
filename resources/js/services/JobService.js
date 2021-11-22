@@ -48,4 +48,10 @@ export default {
     async getJob(id) {
         return authClient.get(`/api/admin/job/${id}`);
     },
+    async getListCompany() {
+        return authClient.get("/api/admin/listCompany");
+    },
+    async getListQuestion() {
+        return authClient.get("/api/admin/listQuestion");
+    },
 };
