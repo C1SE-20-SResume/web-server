@@ -24,6 +24,22 @@ export const actions = {
             console.log(error);
         }
     },
+    async getAppliedJobs({ commit }) {
+        try {
+            const response = await JobService.getAllAppliedJob();
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    async getJobById({ commit }, id) {
+        try {
+            const response = await JobService.getJob(id);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    },
 };
 
 export const getters = {

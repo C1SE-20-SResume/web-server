@@ -56,6 +56,14 @@ export const actions = {
         await AuthService.logout();
         commit(types.LOGOUT);
     },
+    async listUsers({ commit }) {
+        try {
+            const response = await AuthService.getAllUsers();
+            return response.data;
+        } catch (error) {
+            return error;
+        }
+    },
 };
 
 export const getters = {

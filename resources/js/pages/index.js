@@ -1,3 +1,3 @@
 import Dashboard from "./Dashboard.vue";
-
-export { Dashboard };
+import SingleJob from "./SingleJob.vue";
+export { Dashboard, SingleJob };

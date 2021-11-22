@@ -106,7 +106,7 @@ class JobDetailController extends Controller
             $job->save();
             return response()->json([
                 'success' => true,
-                'message' => 'Add successful',
+                'message' => 'Add job successful',
                 'job' => $job_keyword,
             ]);
         }
@@ -160,7 +160,7 @@ class JobDetailController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function edit($job_id)
+    public function edit(Request $request, $job_id)
     {
         $job = JobDetail::where('id', $job_id)->first();
         if ($job != null) {

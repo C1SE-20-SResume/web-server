@@ -7,7 +7,7 @@ const routesWithPrefix = (prefix, routes) => {
 
 import Layout from "../layouts/Layout.vue";
 import { auth, guest } from "../middleware";
-import { Dashboard } from "../pages";
+import { Dashboard, SingleJob } from "../pages";
 import { Login } from "../auth";
 const routes = [
     {
@@ -23,6 +23,11 @@ const routes = [
                 path: "",
                 name: "dashboard",
                 component: Dashboard,
+            },
+            {
+                path: "job/:id",
+                name: "single-job",
+                component: SingleJob,
             },
         ],
     },

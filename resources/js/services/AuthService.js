@@ -55,4 +55,8 @@ export default {
         const response = await authClient.post("/api/logout");
         return response;
     },
+    async getAllUsers() {
+        const response = await authClient.get("/api/admin/listUser");
+        return response;
+    },
 };
