@@ -8,6 +8,7 @@ use App\Http\Controllers\API\JobDetailController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\QuestionDetailController;
+use App\Http\Controllers\API\ScanCV;
 
 /*
 |--------------------------------------------------------------------------
@@ -200,3 +201,6 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::get('admin/listQuestion', [AdminController::class, 'listQuestion']);
 });
+
+// Test Scan CV file upload
+Route::post('scan', [ScanCV::class, 'index']);
