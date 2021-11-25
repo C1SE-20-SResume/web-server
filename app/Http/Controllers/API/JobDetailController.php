@@ -233,15 +233,15 @@ class JobDetailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $job_id)
     {
         // $user = Auth::user();
         // $company = $user->company;
         $request_job = $request->only('job_title', 'job_descrip', 'job_require', 'job_benefit', 'job_place', 'salary', 'date_expire');
         $request_keyword = $request['job_keyword'];
         if (isset($request_job['date_expire']) && $request_job['salary'] >= 0) {
-            $job = JobDetail::where('id', $request['job_id'])->first();
-            JobKeyword::where('job_id', $request['job_id'])->delete();
+            $job = JobDetail::where('id', $job_id)->first();
+            JobKeyword::where('job_id', $job_id)->delete();
             $job->update($request_job);
             $require_score = 0;
             foreach ($request_keyword as $keyword) {
@@ -257,7 +257,7 @@ class JobDetailController extends Controller
                     $require_score = $require_score + 2;
                 }
                 JobKeyword::create([
-                    'job_id' => $request['job_id'],
+                    'job_id' => $job_id,
                     'keyword' => $keyword['keyword'],
                     'priority_weight' => $keyword['weight'],
                 ]);
@@ -266,7 +266,7 @@ class JobDetailController extends Controller
             $job->save();
             return response()->json([
                 'success' => true,
-                'message' => 'Update successful'
+                'message' => 'Update job successful'
             ]);
         }
         return response()->json([
@@ -282,9 +282,12 @@ class JobDetailController extends Controller
      */
     public function destroy($job_id)
     {
-        JobDetail::destroy($job_id);
+        $job = JobDetail::find($job_id);
+        $job->date_expire = now();
+        $job->save();
         return response()->json([
             'status' => true,
+            'message' => 'Close this job successful'
         ]);
     }
 

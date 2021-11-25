@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\QuestionDetailController;
 use App\Http\Controllers\API\ScanCV;
+use App\Http\Controllers\API\QuestionResultController;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,16 +130,16 @@ Route::group(['middleware' => 'auth:api'], function () {
     /**
      * Update a job which had added API 
      * For page 'Add job' when click submit edit of recruiter
-     * @queryParam required: api_token, job_id, job_title, job_descrip, job_require, job_benefit, job_place, salary, date_expire, job_keyword[keyword, weight]
+     * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, job_place, salary, date_expire, job_keyword[keyword, weight]
      */
-    Route::post('recruiter/job/update', [JobDetailController::class, 'update']);
+    Route::post('recruiter/job/update/{job_id}', [JobDetailController::class, 'update']);
 
     /**
-     * Delete a job  API 
+     * Close a job  API 
      * For page 'View job' of recruiter
      * @queryParam required: api_token
      */
-    // Route::get('recruiter/job/delete/{job_id}', [JobDetailController::class, 'destroy']);
+    Route::get('recruiter/job/close/{job_id}', [JobDetailController::class, 'destroy']);
 
     /**
      * Add a specific question API 
@@ -147,6 +148,34 @@ Route::group(['middleware' => 'auth:api'], function () {
      * Notes: 'type_id' in table 'question_types', if apptitude question (type_id is 1,2,3) then param 'ques_option' must have, if option correct is 1 else 0
      */
     Route::post('recruiter/ques/add', [QuestionDetailController::class, 'store']);
+
+    /**
+     * View all questions which recruiter of a company had added API 
+     * For page 'View question' of recruiter
+     * @queryParam required: api_token
+     */
+    Route::get('recruiter/ques/view', [QuestionDetailController::class, 'index']);
+
+    /**
+     * View all details of a question which had added to edit API 
+     * For page 'Add question' when edit but not submit yet of recruiter
+     * @queryParam required: api_token
+     */
+    Route::get('recruiter/ques/edit/{question_id}', [QuestionDetailController::class, 'edit']);
+
+    /**
+     * Update a question which had added API 
+     * For page 'Add question' when click submit edit of recruiter
+     * @queryParam required: api_token, type_id, ques_content, ques_option[opt_content, correct]
+     */
+    Route::post('recruiter/ques/update/{question_id}', [QuestionDetailController::class, 'update']);
+
+    /**
+     * Delete a question  API 
+     * For page 'View question' of recruiter
+     * @queryParam required: api_token
+     */
+    Route::get('recruiter/ques/delete/{question_id}', [QuestionDetailController::class, 'destroy']);
 
 
     //---API OF CANDIDATE---
@@ -203,4 +232,4 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 // Test Scan CV file upload
-Route::post('scan', [ScanCV::class, 'index']);
+Route::post('scan', [ScanCV::class, 'index']);Route::post('scan', [ScanCV::class, 'index']);
