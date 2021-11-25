@@ -8,8 +8,8 @@ use App\Models\JobDetail;
 use App\Models\UserCompany;
 use App\Models\User;
 use App\Models\JobApply;
-use Auth;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use App\Models\QuestionDetail;
 
 class AdminController extends Controller

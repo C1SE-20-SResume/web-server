@@ -56,6 +56,14 @@ export const actions = {
             console.log(error);
         }
     },
+    async scanCV({ commit }, payload) {
+        try {
+            const response = await JobService.scanCV(payload);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    },
 };
 
 export const getters = {

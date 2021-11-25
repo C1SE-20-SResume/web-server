@@ -330,7 +330,7 @@
                                         "
                                         @click="changePage(n)"
                                     >
-                                        {{ n }}
+                                        {{ n > 10 ? "..." : n }}
                                     </button>
                                 </li>
 
