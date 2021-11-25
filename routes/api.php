@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\QuestionDetailController;
 use App\Http\Controllers\API\ScanCV;
+use App\Http\Controllers\API\QuestionResultController;
 
 /*
 |--------------------------------------------------------------------------
@@ -131,7 +132,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      * For page 'Add job' when click submit edit of recruiter
      * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, job_place, salary, date_expire, job_keyword[keyword, weight]
      */
-    Route::post('recruiter/job/update{job_id}', [JobDetailController::class, 'update']);
+    Route::post('recruiter/job/update/{job_id}', [JobDetailController::class, 'update']);
 
     /**
      * Close a job  API 
@@ -231,4 +232,4 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 // Test Scan CV file upload
-Route::post('scan', [ScanCV::class, 'index']);
+Route::post('scan', [ScanCV::class, 'index']);Route::post('scan', [ScanCV::class, 'index']);
