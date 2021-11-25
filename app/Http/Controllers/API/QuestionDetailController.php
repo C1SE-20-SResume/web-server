@@ -22,7 +22,7 @@ class QuestionDetailController extends Controller
         $company_id = null;
         $company_name = null;
         $logo_url = null;
-        if($user->company !=null) {
+        if ($user->company != null) {
             $company_id = $user->company->id;
             $company_name = $user->company->company_name;
             $logo_url = $user->company->logo_url;
@@ -32,7 +32,7 @@ class QuestionDetailController extends Controller
         $personality = null;
         foreach ($questions as $question) {
             $type = $question->type;
-            if(in_array($type->id, [1,2,3])){
+            if (in_array($type->id, [1, 2, 3])) {
                 $apptitude[] = json_decode(json_encode([
                     'ques_id' => $question->id,
                     'type_name' => $type->type_name,
@@ -40,8 +40,7 @@ class QuestionDetailController extends Controller
                     'created_at' => $question->created_at->toDateTimeString(),
                     'updated_at' => $question->updated_at->toDateTimeString(),
                 ]));
-            }
-            else {
+            } else {
                 $personality[] = json_decode(json_encode([
                     'ques_id' => $question->id,
                     'type_name' => $type->type_name,
@@ -82,7 +81,7 @@ class QuestionDetailController extends Controller
         if (isset($request['type_id']) && isset($request['ques_content'])) {
             $user = Auth::user();
             $company_id = null;
-            if($user->company !=null) {
+            if ($user->company != null) {
                 $company_id = $user->company->id;
             }
             $question = QuestionDetail::create([
@@ -91,9 +90,10 @@ class QuestionDetailController extends Controller
                 'ques_content' => $request['ques_content'],
             ]);
             // check if apptitude question then get array option
-            if(in_array($request['type_id'], [1,2,3])) {
+            if (in_array($request['type_id'], [1, 2, 3])) {
                 $ques_option = $request['ques_option'];
-                $ques_option = json_decode($ques_option);
+                $ques_option = json_decode(json_encode($ques_option));
+
                 foreach ($ques_option as $item) {
                     QuestionOption::create([
                         'ques_id' => $question->id,
@@ -102,10 +102,10 @@ class QuestionDetailController extends Controller
                     ]);
                 }
             }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Add question successful',
-                'option' => $ques_option,
             ]);
         }
         return response()->json([
@@ -137,7 +137,7 @@ class QuestionDetailController extends Controller
             $type = $question->type;
             $options = $question->option;
             $ques_option = null;
-            if($options->count() >0) {
+            if ($options->count() > 0) {
                 foreach ($options as $option) {
                     $ques_option[] = json_decode(json_encode([
                         'option_id' => $option->id,
@@ -178,19 +178,19 @@ class QuestionDetailController extends Controller
         if (isset($request['type_id']) && isset($request['ques_content'])) {
             $ques = QuestionDetail::where('id', $ques_id)->first();
             $ques->update($request_ques);
-            if(in_array($request['type_id'], [1,2,3])) {
+            if (in_array($request['type_id'], [1, 2, 3])) {
                 $options = $ques->option;
                 $ques_option = $request['ques_option'];
                 $ques_option = json_decode($ques_option);
-                foreach($ques_option as $item) {
+                foreach ($ques_option as $item) {
                     $updateItems[] = [
                         'option_content' => $item->opt_content,
                         'option_correct' => $item->correct,
                     ];
                 }
-                foreach($options as $index => $option) {
+                foreach ($options as $index => $option) {
                     $option->update($updateItems[$index]);
-                } 
+                }
             }
             return response()->json([
                 'success' => true,

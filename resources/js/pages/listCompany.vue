@@ -32,6 +32,7 @@
                             >
                                 <th class="px-4 py-3">Logo</th>
                                 <th class="px-4 py-3">Company name</th>
+                                <th class="px-4 py-3">Total Job</th>
                             </tr>
                         </thead>
                         <tbody
@@ -82,6 +83,9 @@
                                         >
                                             {{ item.company_name }}
                                         </p>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm">
+                                        {{ item.job_count }}
                                     </td>
                                 </tr>
                             </template>

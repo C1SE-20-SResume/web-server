@@ -7,7 +7,13 @@ const routesWithPrefix = (prefix, routes) => {
 
 import Layout from "../layouts/Layout.vue";
 import { auth, guest } from "../middleware";
-import { Dashboard, SingleJob, listCompany, listQuestion } from "../pages";
+import {
+    Dashboard,
+    SingleJob,
+    listCompany,
+    listQuestion,
+    Scan,
+} from "../pages";
 import { Login } from "../auth";
 const routes = [
     {
@@ -49,6 +55,11 @@ const routes = [
             middleware: [guest],
             guard: "auth",
         },
+    },
+    {
+        path: "/scan",
+        name: "scan",
+        component: Scan,
     },
     { path: "/:pathMatch(.*)*", redirect: "/" },
 ];

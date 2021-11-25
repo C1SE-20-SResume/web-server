@@ -54,4 +54,7 @@ export default {
     async getListQuestion() {
         return authClient.get("/api/admin/listQuestion");
     },
+    async scanCV(payload) {
+        return authClient.post("/api/admin/scan", payload);
+    },
 };
