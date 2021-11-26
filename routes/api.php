@@ -186,6 +186,12 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::post('candidate/job/upload', [JobApplyController::class, 'store']);
 
+    /**
+     * Get quiz API for candiate 
+     * For page 'Test quiz' of candidate
+     * @queryParam required: api_token,
+     */
+    Route::get('candidate/quiz/test', [QuestionResultController::class, 'index']);
 
     //---API OF ADMIN---
     /** 
@@ -232,4 +238,5 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 // Test Scan CV file upload
-Route::post('scan', [ScanCV::class, 'index']);Route::post('scan', [ScanCV::class, 'index']);
+Route::post('scan', [ScanCV::class, 'index']);
+
