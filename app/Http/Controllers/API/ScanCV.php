@@ -20,15 +20,15 @@ class ScanCV extends Controller
     public function index(Request $request)
     {
         $request->validate([
-            'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
+            'file_cv' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
         ]);
         // $request = $request->only('job_id', 'cv_file');
-        if($request->hasFile('cv_file')) {
-            $filePath = $request->file('cv_file');
+        if($request->hasFile('file_cv')) {
+            $filePath = $request->file('file_cv');
             $text = "";
-            $mime = $request->file('cv_file')->getClientMimeType();
+            $mime = $request->file('file_cv')->getClientMimeType();
             // Scan PDF file
-            if($request->file('cv_file')->getClientMimeType() == 'application/pdf'){
+            if($request->file('file_cv')->getClientMimeType() == 'application/pdf'){
                 $parser = new Parser();
                 $pdf = $parser->parseFile($filePath);
                 $text = $pdf->getText();
@@ -62,7 +62,11 @@ class ScanCV extends Controller
             }
             // $text = strtolower($text);
             // $text = mb_convert_encoding($text, "UTF-8", "auto");
-            return response($text);
+            // return response($text);
+            return response()->json([
+                'success' => true,
+                'data' => $text,
+            ]);
         }  
     }
 }
