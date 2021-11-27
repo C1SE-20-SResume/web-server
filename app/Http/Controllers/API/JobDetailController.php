@@ -244,6 +244,7 @@ class JobDetailController extends Controller
             JobKeyword::where('job_id', $job_id)->delete();
             $job->update($request_job);
             $require_score = 0;
+            $request_keyword = json_decode($request_keyword);
             foreach ($request_keyword as $keyword) {
                 if ($keyword['weight'] == 1) {
                     $require_score = $require_score + 0.3;
