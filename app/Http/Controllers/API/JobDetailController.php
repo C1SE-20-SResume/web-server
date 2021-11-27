@@ -246,21 +246,21 @@ class JobDetailController extends Controller
             $require_score = 0;
             $request_keyword = json_decode($request_keyword);
             foreach ($request_keyword as $keyword) {
-                if ($keyword['weight'] == 1) {
+                if ($keyword->weight == 1) {
                     $require_score = $require_score + 0.3;
-                } else if ($keyword['weight'] == 2) {
+                } else if ($keyword->weight == 2) {
                     $require_score = $require_score + 0.7;
-                } else if ($keyword['weight'] == 3) {
+                } else if ($keyword->weight == 3) {
                     $require_score = $require_score + 1.15;
-                } else if ($keyword['weight'] == 4) {
+                } else if ($keyword->weight == 4) {
                     $require_score = $require_score + 1.6;
-                } else if ($keyword['weight'] == 5) {
+                } else if ($keyword->weight == 5) {
                     $require_score = $require_score + 2;
                 }
                 JobKeyword::create([
                     'job_id' => $job_id,
-                    'keyword' => $keyword['keyword'],
-                    'priority_weight' => $keyword['weight'],
+                    'keyword' => $keyword->keyword,
+                    'priority_weight' => $keyword->weight,
                 ]);
             }
             $job->require_score = $require_score;
