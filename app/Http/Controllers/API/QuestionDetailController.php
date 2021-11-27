@@ -94,7 +94,6 @@ class QuestionDetailController extends Controller
             if (in_array($request['type_id'], [1, 2, 3])) {
                 $ques_option = $request['ques_option'];
                 $ques_option = json_decode(json_encode($ques_option));
-
                 foreach ($ques_option as $item) {
                     QuestionOption::create([
                         'ques_id' => $question->id,
@@ -182,7 +181,7 @@ class QuestionDetailController extends Controller
             if (in_array($request['type_id'], [1, 2, 3])) {
                 $options = $ques->option;
                 $ques_option = $request['ques_option'];
-                $ques_option = json_decode($ques_option);
+                $ques_option = json_decode(json_encode($ques_option));
                 foreach ($ques_option as $item) {
                     $updateItems[] = [
                         'option_content' => $item->opt_content,
