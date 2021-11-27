@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\QuestionDetail;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
+use App\Models\QuestionResult;
+use Auth;
 
 class QuestionResultController extends Controller
 {
@@ -17,29 +19,48 @@ class QuestionResultController extends Controller
      */
     public function index()
     {
+        // Check candidate have done both quizzes or not
+        $user = Auth::user();
+        $results = QuestionResult::select('type_id')->where('user_id', $user->id)->get();
+        $types = [];
+        if(count($results) >0) {
+            foreach($results as $result) {
+                $types[] = $result->type_id;
+            }
+        }
+        if(count(array_diff([1,2,3,4,5,6,7,8], $types)) ==0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You had done both types of quizzes',
+            ]);
+        }
         $maths = QuestionDetail::where('type_id', 1)->inRandomOrder()->limit(5)->get();
         $english = QuestionDetail::where('type_id', 2)->inRandomOrder()->limit(5)->get();
         $programing = QuestionDetail::where('type_id', 3)->inRandomOrder()->limit(5)->get();
         $aptitude = json_decode(json_encode([
+            // toán
             'maths' => $this->getOptions($maths),
+            // tiếng anh
             'english' => $this->getOptions($english),
+            // lập trình
             'programing' => $this->getOptions($programing),
         ]));
-        // cởi mở
+        
         $openness = QuestionDetail::where('type_id', 4)->inRandomOrder()->limit(3)->get();
-        // tận tâm
         $conscientiousness = QuestionDetail::where('type_id', 5)->inRandomOrder()->limit(3)->get();
-        // hướng ngoại
         $extraversion = QuestionDetail::where('type_id', 6)->inRandomOrder()->limit(3)->get();
-        // dễ chịu
         $agreeableness = QuestionDetail::where('type_id', 7)->inRandomOrder()->limit(3)->get();
-        // nhạy cảm
         $neuroticism = QuestionDetail::where('type_id', 8)->inRandomOrder()->limit(3)->get();
         $personality = json_decode(json_encode([
+            // cởi mở
             'openness' => $this->getOptions($openness),
+            // tận tâm
             'conscientiousness' => $this->getOptions($conscientiousness),
+            // hướng ngoại
             'extraversion' => $this->getOptions($extraversion),
+            // dễ chịu
             'agreeableness' => $this->getOptions($agreeableness),
+            // nhạy cảm
             'neuroticism' => $this->getOptions($neuroticism),
         ]));
         return response()->json([
@@ -48,11 +69,10 @@ class QuestionResultController extends Controller
             'personality' => $personality,
         ]);
         //paginate(5);
-        
     }
 
     /**
-     *
+     * Get all options of the question which is aptitude quiz
      */
     public function getOptions($array)
     {
@@ -100,6 +120,27 @@ class QuestionResultController extends Controller
      */
     public function store(Request $request)
     {
+        $request = $request->only('ques_result');
+        if (isset($request['ques_result'])) {
+            $user = Auth::user();
+            $ques_result = $request['ques_result'];
+            $ques_result = json_decode($ques_result);
+            foreach ($ques_result as $result) {
+                QuestionResult::create([
+                    'user_id' => $user->id,
+                    'type_id' => $result->type_id,
+                    'ques_score' => $result->score,
+                ]);
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Save test quiz results successful',
+                'ques_result' => $ques_result,
+            ]);
+        }
+        return response()->json([
+            'success' => false,
+        ]);
     }
 
     /**

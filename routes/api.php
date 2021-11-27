@@ -193,6 +193,15 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::get('candidate/quiz/test', [QuestionResultController::class, 'index']);
 
+    /**
+     * Save test quiz results API for candiate 
+     * For page 'Test quiz' of candidate
+     * @queryParam required: api_token, ques_result[type_id, score]
+     * Note: 'score' is total score for a type of question
+     */
+    Route::post('candidate/quiz/result', [QuestionResultController::class, 'store']);
+
+
     //---API OF ADMIN---
     /** 
      * Total apply of all jobs API
