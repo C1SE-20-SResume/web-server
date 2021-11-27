@@ -244,8 +244,14 @@ Route::group(['middleware' => 'auth:api'], function () {
      * @queryParam required: api_token
      */
     Route::get('admin/listQuestion', [AdminController::class, 'listQuestion']);
+
+    /**
+     * Test Scan CV file upload
+     * only Admin
+     * @queryParam required: api_token, file_cv, lang
+     */
+    Route::post('admin/scan', [ScanCV::class, 'index']);
 });
 
-// Test Scan CV file upload
-Route::post('scan', [ScanCV::class, 'index']);
+
 
