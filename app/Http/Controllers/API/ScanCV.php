@@ -8,9 +8,10 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
-* Import the file parser class
-*/
+ * Import the file parser class
+ */
 require_once "../vendor/autoload.php";
+
 use Smalot\PdfParser\Parser;
 use LukeMadhanga\DocumentParser;
 use thiagoalessio\TesseractOCR\TesseractOCR;
@@ -23,21 +24,23 @@ class ScanCV extends Controller
             'file_cv' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
         ]);
         // $request = $request->only('job_id', 'cv_file');
-        if($request->hasFile('file_cv')) {
+        if ($request->hasFile('file_cv')) {
             $filePath = $request->file('file_cv');
             $text = "";
             $mime = $request->file('file_cv')->getClientMimeType();
             // Scan PDF file
-            if($request->file('file_cv')->getClientMimeType() == 'application/pdf'){
+            if ($request->file('file_cv')->getClientMimeType() == 'application/pdf') {
                 $parser = new Parser();
                 $pdf = $parser->parseFile($filePath);
                 $text = $pdf->getText();
                 $text = str_replace("\t", "", $text);
                 $text = str_replace("  ", " ", $text);
-            } 
+            }
             // Scan TXT, DOC, DOCX file
-            else if($mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-            || $mime == 'application/msword' || $mime == 'text/plain') {
+            else if (
+                $mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                || $mime == 'application/msword' || $mime == 'text/plain'
+            ) {
                 $parser = new DocumentParser();
                 $text = $parser->parseFromFile($filePath, $mime);
                 $text = str_replace("<em>", "", $text);
@@ -45,18 +48,16 @@ class ScanCV extends Controller
             }
             // Scan PNG, JPG, JPEG
             // Require: install Tesseract (https://github.com/UB-Mannheim/tesseract/wiki)
-            else if($mime == 'image/png' || $mime == 'image/jpeg') {
+            else if ($mime == 'image/png' || $mime == 'image/jpeg') {
                 $ocr = new TesseractOCR();
                 $ocr->image($filePath);
-                if($request['lang'] == 'en') {
+                if ($request['lang'] == 'en') {
                     $ocr->lang('eng');
-                }
-                else if($request['lang'] == 'vi') {
+                } else if ($request['lang'] == 'vi') {
                     $ocr->lang('vie');
-                }
-                else $ocr->lang('vie', 'eng');
+                } else $ocr->lang('vie', 'eng');
                 // If the command 'tesseract' was not found (Postman error), define a custom path of the tesseract executable
-                // $ocr->executable('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tesseract.exe');
+                // $ocr->executable('C:\Program Files\Tesseract-OCR\tesseract.exe');
                 // $ocr->tessdataDir('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tessdata');
                 $text = $ocr->run(500);
             }
@@ -67,6 +68,6 @@ class ScanCV extends Controller
                 'success' => true,
                 'data' => $text,
             ]);
-        }  
+        }
     }
 }
