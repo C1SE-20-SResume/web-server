@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gray-700 min-h-screen relative">
+    <div class="bg-gray-700 min-h-screen h-auto relative">
         <div
             class="
                 absolute
@@ -21,7 +21,12 @@
             >
                 <div class="mb-4">
                     <label class="block">File</label>
-                    <input @change="onFileChange" type="file" name="file_cv" />
+                    <input
+                        @change="onFileChange"
+                        type="file"
+                        name="file_cv"
+                        required
+                    />
                 </div>
                 <div class="mb-4">
                     <select
@@ -74,9 +79,9 @@ export default {
             formData.append("file_cv", this.file);
             formData.append("lang", this.language);
             const res = this.$store.dispatch("job/scanCV", formData);
-            res.then((res) => res.json())
+            res.then((res) => res.data)
                 .then((res) => {
-                    this.data = res;
+                    this.data = res.data;
                 })
                 .catch((err) => {
                     console.log(err);

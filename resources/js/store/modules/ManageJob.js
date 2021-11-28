@@ -59,7 +59,7 @@ export const actions = {
     async scanCV({ commit }, payload) {
         try {
             const response = await JobService.scanCV(payload);
-            return response.data;
+            return response;
         } catch (error) {
             console.log(error);
         }
