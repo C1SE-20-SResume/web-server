@@ -23,12 +23,12 @@ class QuestionResultController extends Controller
         $user = Auth::user();
         $results = QuestionResult::select('type_id')->where('user_id', $user->id)->get();
         $types = [];
-        if(count($results) >0) {
-            foreach($results as $result) {
+        if (count($results) > 0) {
+            foreach ($results as $result) {
                 $types[] = $result->type_id;
             }
         }
-        if(count(array_diff([1,2,3,4,5,6,7,8], $types)) ==0) {
+        if (count(array_diff([1, 2, 3, 4, 5, 6, 7, 8], $types)) == 0) {
             return response()->json([
                 'success' => false,
                 'message' => 'You had done both types of quizzes',
@@ -45,7 +45,7 @@ class QuestionResultController extends Controller
             // lập trình
             'programing' => $this->getOptions($programing),
         ]));
-        
+
         $openness = QuestionDetail::where('type_id', 4)->inRandomOrder()->limit(3)->get();
         $conscientiousness = QuestionDetail::where('type_id', 5)->inRandomOrder()->limit(3)->get();
         $extraversion = QuestionDetail::where('type_id', 6)->inRandomOrder()->limit(3)->get();
@@ -77,11 +77,11 @@ class QuestionResultController extends Controller
     public function getOptions($array)
     {
         $array_data = null;
-        foreach($array as $item){
+        foreach ($array as $item) {
             $options = $item->option;
             $option_data = null;
-            if($options->count() >0){
-                foreach($options as $option){
+            if ($options->count() > 0) {
+                foreach ($options as $option) {
                     $option_data[] = json_decode(json_encode([
                         'option_id' => $option->id,
                         'option_content' => $option->option_content,
@@ -97,9 +97,8 @@ class QuestionResultController extends Controller
                 'updated_at' => $item->updated_at->toDateTimeString(),
                 'option' => $option_data,
             ]));
-               
         }
-        return($array_data);
+        return ($array_data);
     }
 
     /**
@@ -124,7 +123,7 @@ class QuestionResultController extends Controller
         if (isset($request['ques_result'])) {
             $user = Auth::user();
             $ques_result = $request['ques_result'];
-            $ques_result = json_decode($ques_result);
+            $ques_result = json_decode(json_encode($ques_result));
             foreach ($ques_result as $result) {
                 QuestionResult::create([
                     'user_id' => $user->id,
