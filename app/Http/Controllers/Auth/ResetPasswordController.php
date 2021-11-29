@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
-use App\User;
+use App\Models\User;
 use Hash;
 
 class ResetPasswordController extends Controller
@@ -38,24 +38,28 @@ class ResetPasswordController extends Controller
     public function updatePassword(Request $request)
     {
         $request->validate([
+            'token' => 'required',
             'email' => 'required|email|exists:users',
-            'password' => 'required|string|min:6|confirmed',
-            'password_confirmation' => 'required',
-
+            'password' => 'required|string|min:8',
+            // 'password' => 'required|string|min:6|confirmed',
+            // 'password_confirmation' => 'required',
         ]);
-
         $updatePassword = DB::table('password_resets')
             ->where(['email' => $request->email, 'token' => $request->token])
             ->first();
-
-        if (!$updatePassword)
-            return back()->withInput()->with('error', 'Invalid token!');
-
+        if (!$updatePassword) {
+            // return back()->withInput()->with('error', 'Invalid token!');
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: Invalid token!'
+            ]);
+        }
         $user = User::where('email', $request->email)
             ->update(['password' => Hash::make($request->password)]);
-
         DB::table('password_resets')->where(['email' => $request->email])->delete();
-
-        return;
+        return response()->json([
+            'success' => true,
+            'message' => 'Your password has been changed!'
+        ]);
     }
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\QuestionDetailController;
 use App\Http\Controllers\API\ScanCV;
 use App\Http\Controllers\API\QuestionResultController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,17 +47,24 @@ Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
 
 /**
- * Forget password
+ * Forget password View
+ * Note: API is used only for forget password template, not need to call
+ * Không cần gọi cái này nha Đô
  */
-
 Route::get('forget-password', [ForgotPasswordController::class, 'getEmail'])
     ->name('forget-password');
 
 /** 
+ * Forgot password API
  * @queryParam required: email
  */
-Route::post('forget-password', [ForgotPasswordController::class, 'postEmail'])
-    ->name('forget-password');
+Route::post('password/forgot', [ForgotPasswordController::class, 'postEmail']);
+
+/** 
+ * Reset password API
+ * @queryParam required: token, email, password
+ */
+Route::post('password/reset', [ResetPasswordController::class, 'updatePassword']);
 
 /**
  * Show all jobs API 

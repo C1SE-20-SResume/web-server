@@ -68,7 +68,6 @@ class QuestionResultController extends Controller
             'aptitude' => $aptitude,
             'personality' => $personality,
         ]);
-        //paginate(5);
     }
 
     /**

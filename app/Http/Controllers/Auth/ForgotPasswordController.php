@@ -36,21 +36,18 @@ class ForgotPasswordController extends Controller
         $request->validate([
             'email' => 'required|email|exists:users',
         ]);
-
         $token = Str::random(60);
-
         DB::table('password_resets')->insert(
             ['email' => $request->email, 'token' => $token, 'created_at' => Carbon::now()]
         );
-
         // send email with template and token
-        Mail::send('template.mail.verify', ['token' => $token], function ($m) use ($request) {
-            $m->from(env('MAIL_FROM_NAME'), 'Laravel');
-            $m->to($request->email)->subject('Reset Password');
+        Mail::send('template.mail.verify', ['token' => $token], function ($message) use ($request) {
+            // $message->from(env('MAIL_FROM_NAME'), 'Laravel');
+            $message->from(env('MAIL_FROM_ADDRESS'), 'SResume');
+            $message->to($request->email)->subject('Reset Password');
         });
-
         return response()->json([
-            'status' => 'success',
+            'success' => true,
             'message' => 'We have e-mailed your password reset link!'
         ]);
     }

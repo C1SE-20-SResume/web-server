@@ -220,6 +220,7 @@ class JobDetailController extends Controller
                 'logo_url' => $company->logo_url,
                 'data' => $data,
             ]);
+            //paginate(5);
         }
         return response()->json([
             'success' => false,
