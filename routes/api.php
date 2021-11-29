@@ -11,6 +11,8 @@ use App\Http\Controllers\API\QuestionDetailController;
 use App\Http\Controllers\API\ScanCV;
 use App\Http\Controllers\API\QuestionResultController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\API\ManagePageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +29,6 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 //     return $request->user();
 // });
 
-/**
- * User's information API
- * @queryParam required: api_token
- */
-Route::get('login', [UserController::class, 'check']);
 
 /**
  * Login API
@@ -84,6 +81,12 @@ Route::get('job/{job_id}', [JobDetailController::class, 'show']);
  */
 Route::get('popularjob', [JobDetailController::class, 'homepage']);
 
+/**
+ * Show statistic about total of companies, applies, jobs, users API 
+ * For page 'Home page' website
+ */
+Route::get('statistic', [ManagePageController::class, 'statistic']);
+
 
 Route::group(['middleware' => 'auth:api'], function () {
 
@@ -92,12 +95,25 @@ Route::group(['middleware' => 'auth:api'], function () {
      * @queryParam required: api_token
      */
     Route::get('user', [UserController::class, 'getUser']);
+
     /**
      * Logout API
      * @queryParam required: api_token
      */
     Route::post('logout', [UserController::class, 'logout']);
 
+    /**
+     * User's information API
+     * @queryParam required: api_token
+     */
+    Route::get('login', [UserController::class, 'check']);
+
+    /** 
+     * Change password API
+     * @queryParam required: api_token, current_password, new_password
+     */
+    Route::post('password/change', [HomeController::class, 'changePassword']);
+    
 
     //---API OF RECRUITER---
     /**

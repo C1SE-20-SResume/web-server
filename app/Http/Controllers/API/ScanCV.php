@@ -10,8 +10,6 @@ use Illuminate\Support\Str;
 /**
  * Import the file parser class
  */
-require_once "../vendor/autoload.php";
-
 use Smalot\PdfParser\Parser;
 use LukeMadhanga\DocumentParser;
 use thiagoalessio\TesseractOCR\TesseractOCR;
