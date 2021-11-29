@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Hash;
 use Auth;
+use Illuminate\Http\Response;
 
 class HomeController extends Controller
 {

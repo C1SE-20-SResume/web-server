@@ -12,6 +12,7 @@ use App\Http\Controllers\API\ScanCV;
 use App\Http\Controllers\API\QuestionResultController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\API\ManagePageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +80,12 @@ Route::get('job/{job_id}', [JobDetailController::class, 'show']);
  * For page 'Home page' website
  */
 Route::get('popularjob', [JobDetailController::class, 'homepage']);
+
+/**
+ * Show statistic about total of companies, applies, jobs, users API 
+ * For page 'Home page' website
+ */
+Route::get('statistic', [ManagePageController::class, 'statistic']);
 
 
 Route::group(['middleware' => 'auth:api'], function () {
