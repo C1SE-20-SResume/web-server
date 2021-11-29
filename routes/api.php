@@ -11,6 +11,7 @@ use App\Http\Controllers\API\QuestionDetailController;
 use App\Http\Controllers\API\ScanCV;
 use App\Http\Controllers\API\QuestionResultController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +28,6 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 //     return $request->user();
 // });
 
-/**
- * User's information API
- * @queryParam required: api_token
- */
-Route::get('login', [UserController::class, 'check']);
 
 /**
  * Login API
@@ -92,12 +88,25 @@ Route::group(['middleware' => 'auth:api'], function () {
      * @queryParam required: api_token
      */
     Route::get('user', [UserController::class, 'getUser']);
+
     /**
      * Logout API
      * @queryParam required: api_token
      */
     Route::post('logout', [UserController::class, 'logout']);
 
+    /**
+     * User's information API
+     * @queryParam required: api_token
+     */
+    Route::get('login', [UserController::class, 'check']);
+
+    /** 
+     * Change password API
+     * @queryParam required: api_token, current_password, new_password
+     */
+    Route::post('password/change', [HomeController::class, 'changePassword']);
+    
 
     //---API OF RECRUITER---
     /**
