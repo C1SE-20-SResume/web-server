@@ -13,6 +13,7 @@ import {
     listCompany,
     listQuestion,
     Scan,
+    ResetPassword,
 } from "../pages";
 import { Login } from "../auth";
 const routes = [
@@ -61,7 +62,12 @@ const routes = [
         name: "scan",
         component: Scan,
     },
-    { path: "/:pathMatch(.*)*", redirect: "/" },
+
+    {
+        // any match not reset-password
+        path: "/:pathMatch(.*)*:not(reset-password)",
+        redirect: "/",
+    },
 ];
 
 export default routes;
