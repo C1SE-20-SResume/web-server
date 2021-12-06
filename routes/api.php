@@ -113,7 +113,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      * @queryParam required: api_token, current_password, new_password
      */
     Route::post('password/change', [HomeController::class, 'changePassword']);
-    
+
 
     //---API OF RECRUITER---
     /**
@@ -211,7 +211,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('candidate/job/upload', [JobApplyController::class, 'store']);
 
     /**
-     * Get quiz API for candiate 
+     * Get quiz API for candidate 
      * For page 'Test quiz' of candidate
      * @queryParam required: api_token,
      */
@@ -276,6 +276,3 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::post('admin/scan', [ScanCV::class, 'index']);
 });
-
-
-

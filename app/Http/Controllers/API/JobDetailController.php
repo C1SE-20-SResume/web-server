@@ -285,7 +285,7 @@ class JobDetailController extends Controller
     public function destroy($job_id)
     {
         $job = JobDetail::find($job_id);
-        $job->date_expire = now();
+        $job->date_expire = Carbon::now()->subDays(1);
         $job->save();
         return response()->json([
             'status' => true,
