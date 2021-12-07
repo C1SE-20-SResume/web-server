@@ -28,6 +28,7 @@ class JobDetailFactory extends Factory
             'job_descrip' => $this->faker->paragraph(3, true),
             'job_require' => $this->faker->paragraph(3, true),
             'job_benefit' => $this->faker->paragraph(3, true),
+            'work_time' => $this->faker->randomElement(['f', 'p']), // f: fulltime, p: parttime
             'job_place' => $this->faker->city(),
             'salary'=> $this->faker->numberBetween(100.0, 10000.0),
             'date_expire'=> $this->faker->dateTimeBetween('2021-10-01 00:00:00', '2021-12-12 00:00:00', null),

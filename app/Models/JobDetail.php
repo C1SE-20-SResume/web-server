@@ -27,6 +27,7 @@ class JobDetail extends Model
         'job_descrip',
         'job_require',
         'job_benefit',
+        'work_time',
         'job_place',
         'salary',
         'date_expire',
