@@ -120,7 +120,7 @@ class UserController extends Controller
             $check_user = User::where('email', $request['email'])->get();
             if ($check_user->count() == 0 && isset($request['password'])) {
                 $request = $request->only('full_name', 'gender', 'date_birth', 'phone_number', 'email', 'password');
-                User::create([
+                $user = User::create([
                     'full_name' => $request['full_name'],
                     'gender' => $request['gender'],
                     'date_birth' => $request['date_birth'],
@@ -132,6 +132,7 @@ class UserController extends Controller
                     'success' => true,
                     'message' => 'Register successful'
                 ]);
+                event(new Registered($user));
             } else {
                 return response()->json([
                     'success' => false,

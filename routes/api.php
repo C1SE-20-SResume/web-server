@@ -30,12 +30,15 @@ use App\Http\Controllers\API\ManagePageController;
 // });
 
 
+Route::group(['middleware' => 'verified'], function () {
 /**
  * Login API
  * @queryParam required: email, password
  * Password default: password
  */
 Route::post('login', [UserController::class, 'login']);
+});
+
 
 /**
  * Register API
@@ -89,6 +92,13 @@ Route::get('statistic', [ManagePageController::class, 'statistic']);
 
 
 Route::group(['middleware' => 'auth:api'], function () {
+
+    /**
+    * Verification Routes
+    */
+    Route::get('email/verify', 'VerificationController@show')->name('verification.notice');
+    Route::get('email/verify/{id}/{hash}', 'VerificationController@verify')->name('verification.verify')->middleware(['signed']);
+    Route::post('email/resend', 'VerificationController@resend')->name('verification.resend');
 
     /**
      * Get auth user current 
