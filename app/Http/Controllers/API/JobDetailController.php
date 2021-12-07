@@ -24,20 +24,19 @@ class JobDetailController extends Controller
         $data = [];
         $currentTime = now();
         foreach ($jobs as $job) {
-            if ($job->date_expire >= $currentTime->toDateTimeString()) {
-                $company = $job->company;
-                $data[] = json_decode(json_encode([
-                    'job_id' => $job->id,
-                    'company_name' => $company->company_name,
-                    'logo_url' => $company->logo_url,
-                    'job_title' => $job->job_title,
-                    'job_place' => $job->job_place,
-                    'salary' => $job->salary,
-                    'date_expire' => $job->date_expire,
-                    'created_at' => $job->created_at->toDateTimeString(),
-                    'updated_at' => $job->updated_at->toDateTimeString(),
-                ]));
-            }
+            $company = $job->company;
+            $data[] = json_decode(json_encode([
+                'job_id' => $job->id,
+                'expired' => $job->date_expire < $currentTime->toDateTimeString() ? true:false,
+                'company_name' => $company->company_name,
+                'logo_url' => $company->logo_url,
+                'job_title' => $job->job_title,
+                'job_place' => $job->job_place,
+                'salary' => $job->salary,
+                'date_expire' => $job->date_expire,
+                'created_at' => $job->created_at->toDateTimeString(),
+                'updated_at' => $job->updated_at->toDateTimeString(),
+            ]));
         }
         $countOfJobs = count($data);
         return response()->json([
