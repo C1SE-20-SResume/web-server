@@ -100,7 +100,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      * Logout API
      * @queryParam required: api_token
      */
-    Route::post('logout', [UserController::class, 'logout']);
+    Route::get('logout', [UserController::class, 'logout']);
 
     /**
      * User's information API
@@ -206,9 +206,17 @@ Route::group(['middleware' => 'auth:api'], function () {
     /**
      * Upload a specific CV file (.pdf) and return result API 
      * For page 'Job details' of candidate
-     * @queryParam required: api_token, job_id, cv_file
+     * @queryParam required: api_token, job_id, cv_file, cv_new
+     * Note: cv_new default is null, if use new cv file then cv_new is true, else cv_new is false
      */
     Route::post('candidate/job/upload', [JobApplyController::class, 'store']);
+
+    /**
+     * Check if the candidate has applied or not API 
+     * For page 'Job details' of candidate
+     * @queryParam required: api_token
+     */
+    Route::get('candidate/apply/check', [JobApplyController::class, 'check']);
 
     /**
      * Get quiz API for candidate 
