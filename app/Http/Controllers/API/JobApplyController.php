@@ -55,6 +55,7 @@ class JobApplyController extends Controller
                 $applies[] = json_decode(json_encode([
                     'job_id' => $job->id,
                     'job_title' => $job->job_title,
+                    'work_time' => $job->work_time,
                     'job_place' => $job->job_place,
                     'salary' => $job->salary,
                     'date_expire' => $job->date_expire,

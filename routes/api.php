@@ -143,7 +143,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     /**
      * Add a specific job API 
      * For page 'Add job' of recruiter
-     * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, job_place, salary, date_expire, job_keyword[keyword, weight]
+     * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, work_time, job_place, salary, date_expire, job_keyword[keyword, weight]
+     * Note: if job's work time is fulltime (value: 'f') else is parttime (value: 'p')
      */
     Route::post('recruiter/job/add', [JobDetailController::class, 'store']);
 
@@ -164,7 +165,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     /**
      * Update a job which had added API 
      * For page 'Add job' when click submit edit of recruiter
-     * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, job_place, salary, date_expire, job_keyword[keyword, weight]
+     * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, work_time, job_place, salary, date_expire, job_keyword[keyword, weight]
      */
     Route::post('recruiter/job/update/{job_id}', [JobDetailController::class, 'update']);
 
