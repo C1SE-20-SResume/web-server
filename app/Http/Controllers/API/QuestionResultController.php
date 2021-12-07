@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 use App\Models\QuestionResult;
 use Auth;
+use Illuminate\Support\Arr;
 
 class QuestionResultController extends Controller
 {
@@ -123,17 +124,43 @@ class QuestionResultController extends Controller
             $user = Auth::user();
             $ques_result = $request['ques_result'];
             $ques_result = json_decode(json_encode($ques_result));
+            $results = [];
             foreach ($ques_result as $result) {
-                QuestionResult::create([
+                $results[] = QuestionResult::create([
                     'user_id' => $user->id,
                     'type_id' => $result->type_id,
                     'ques_score' => $result->score,
                 ]);
             }
+            $aptitude_score = 0;
+            $personality_score = 0;
+            $aptitude = collect($ques_result)->whereIn('type_id', [1,2,3]);
+            foreach($aptitude as $item) {
+                $aptitude_score = $aptitude_score + $item->score;
+            }
+            $personality = collect($ques_result)->whereIn('type_id', [4,5,6,7,8]);
+            foreach($personality as $item) {
+                $personality_score = $personality_score + $item->score;
+            }
+            $aptitude_graph = [];
+            $personality_graph = [];
+            foreach($results as $item) {
+                $type = $item->type;
+                if(in_array($type->id, [1, 2, 3])) {
+                    $aptitude_graph = Arr::add($aptitude_graph, $type->type_name, $item->ques_score);
+                }
+                else if(in_array($type->id, [4, 5, 6, 7, 8])) {
+                    $personality_graph = Arr::add($personality_graph, $type->type_name, $item->ques_score);
+                }
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'Save test quiz results successful',
-                'ques_result' => $ques_result,
+                'aptitude_score' => $aptitude_score . '/15',
+                'personality_score' => $personality_score . '/75',
+                'total_score' => ($aptitude_score + $personality_score) . '/100',
+                'aptitude_graph' => $aptitude_graph,
+                'personality_graph' => $personality_graph,
             ]);
         }
         return response()->json([

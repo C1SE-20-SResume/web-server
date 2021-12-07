@@ -247,8 +247,7 @@ class JobApplyController extends Controller
             return response()->json([
                 'success' => true,
                 'keyword_found' => $keyword_found,
-                'require_score' => $job->require_score,
-                'cv_score' => $cv_weight,
+                'cv_score' => $cv_weight . '/' . $job->require_score,
                 'rank' => $ranks->where('user_id', $user->id)->first()->rank,
                 'cv_pass' => $pass_status,
             ]);
