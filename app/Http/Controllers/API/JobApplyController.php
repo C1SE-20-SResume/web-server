@@ -273,12 +273,12 @@ class JobApplyController extends Controller
             foreach ($applies as $apply) {
                 $user = $apply->user;
                 $results = $user->result;
-                $apptitude_score = [];
+                $aptitude_score = [];
                 $personality_score = [];
                 foreach ($results as $result) {
                     if ($result->type_id == 1 || $result->type_id == 2 || $result->type_id == 3) {
                         $type = $result->type;
-                        $apptitude_score[] = json_decode(json_encode([
+                        $aptitude_score[] = json_decode(json_encode([
                             'type_name' => $type->type_name,
                             'score' => $result->ques_score,
                         ]));
@@ -302,7 +302,7 @@ class JobApplyController extends Controller
                     'pass_status' => $apply->pass_status,
                     'apply_created_at' => $apply->created_at->toDateTimeString(),
                     'apply_updated_at' => $apply->updated_at->toDateTimeString(),
-                    'apptitude_score' => $apptitude_score,
+                    'aptitude_score' => $aptitude_score,
                     'personality_score' => $personality_score,
                 ]));
             }

@@ -179,7 +179,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      * Add a specific question API 
      * For page 'Add question' of recruiter
      * @queryParam required: api_token, type_id, ques_content, ques_option[opt_content, correct]
-     * Notes: 'type_id' in table 'question_types', if apptitude question (type_id is 1,2,3) then param 'ques_option' must have, if option correct is 1 else 0
+     * Notes: 'type_id' in table 'question_types', if aptitude question (type_id is 1,2,3) then param 'ques_option' must have, if option correct is 1 else 0
      */
     Route::post('recruiter/ques/add', [QuestionDetailController::class, 'store']);
 

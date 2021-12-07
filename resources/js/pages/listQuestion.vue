@@ -43,7 +43,7 @@
                             "
                         >
                             <template
-                                v-for="item in question.apptitude"
+                                v-for="item in question.aptitude"
                                 :key="item.ques_id"
                             >
                                 <tr class="text-gray-700 dark:text-gray-400">

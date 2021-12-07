@@ -29,12 +29,12 @@ class QuestionDetailController extends Controller
             $logo_url = $user->company->logo_url;
         }
         $questions = QuestionDetail::where('company_id', $company_id)->get();
-        $apptitude = null;
+        $aptitude = null;
         $personality = null;
         foreach ($questions as $question) {
             $type = $question->type;
             if (in_array($type->id, [1, 2, 3])) {
-                $apptitude[] = json_decode(json_encode([
+                $aptitude[] = json_decode(json_encode([
                     'ques_id' => $question->id,
                     'type_name' => $type->type_name,
                     'ques_content' => $question->ques_content,
@@ -55,7 +55,7 @@ class QuestionDetailController extends Controller
             'success' => true,
             'company_name' => $company_name,
             'logo_url' => $logo_url,
-            'apptitude' => $apptitude,
+            'aptitude' => $aptitude,
             'personality' => $personality,
         ]);
     }
@@ -90,7 +90,7 @@ class QuestionDetailController extends Controller
                 'type_id' => $request['type_id'],
                 'ques_content' => $request['ques_content'],
             ]);
-            // check if apptitude question then get array option
+            // check if aptitude question then get array option
             if (in_array($request['type_id'], [1, 2, 3])) {
                 $ques_option = $request['ques_option'];
                 $ques_option = json_decode(json_encode($ques_option));
