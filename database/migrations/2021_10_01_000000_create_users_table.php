@@ -21,9 +21,11 @@ class CreateUsersTable extends Migration
             $table->date('date_birth');
             $table->string('phone_number', 10);
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable()->default(null);
             $table->string('password');
             $table->tinyInteger('role_level')->default(0);
             $table->string('api_token', 80)->unique()->nullable()->default(null);
+            // $table->rememberToken();
             $table->timestamps();
         });
     }
