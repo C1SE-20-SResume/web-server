@@ -116,12 +116,12 @@ class JobApplyController extends Controller
             // Check candidate have done both quizzes or not
             $results = QuestionResult::select('type_id')->where('user_id', $user->id)->get();
             $types = [];
-            if(count($results) >0) {
-                foreach($results as $result) {
+            if (count($results) > 0) {
+                foreach ($results as $result) {
                     $types[] = $result->type_id;
                 }
             }
-            if(count(array_diff([1,2,3,4,5,6,7,8], $types)) >0) {
+            if (count(array_diff([1, 2, 3, 4, 5, 6, 7, 8], $types)) > 0) {
                 return response()->json([
                     'success' => false,
                     'message' => 'You have not done both types of quizzes',
