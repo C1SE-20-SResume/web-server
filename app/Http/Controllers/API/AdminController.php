@@ -199,13 +199,13 @@ class AdminController extends Controller
             ], 403);
         } else {
             $list_ques = QuestionDetail::all();
-            $apptitude = [];
+            $aptitude = [];
             $personality = [];
             foreach ($list_ques as $ques) {
                 $type = $ques->type;
                 if (in_array($ques->type_id, [1, 2, 3])) {
                     $option = $ques->option;
-                    $apptitude[] = json_decode(json_encode([
+                    $aptitude[] = json_decode(json_encode([
                         'ques_id' => $ques->id,
                         'type_name' => $type->type_name,
                         'ques_content' => $ques->ques_content,
@@ -227,7 +227,7 @@ class AdminController extends Controller
             return response()->json([
                 'message' => 'Success',
                 'count' => $count,
-                'apptitude' => $apptitude,
+                'aptitude' => $aptitude,
                 'personality' => $personality,
             ], 200);
         }

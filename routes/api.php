@@ -30,12 +30,15 @@ use App\Http\Controllers\API\ManagePageController;
 // });
 
 
+Route::group(['middleware' => 'verified'], function () {
 /**
  * Login API
  * @queryParam required: email, password
  * Password default: password
  */
 Route::post('login', [UserController::class, 'login']);
+});
+
 
 /**
  * Register API
@@ -91,6 +94,13 @@ Route::get('statistic', [ManagePageController::class, 'statistic']);
 Route::group(['middleware' => 'auth:api'], function () {
 
     /**
+    * Verification Routes
+    */
+    Route::get('email/verify', 'VerificationController@show')->name('verification.notice');
+    Route::get('email/verify/{id}/{hash}', 'VerificationController@verify')->name('verification.verify')->middleware(['signed']);
+    Route::post('email/resend', 'VerificationController@resend')->name('verification.resend');
+
+    /**
      * Get auth user current 
      * @queryParam required: api_token
      */
@@ -100,7 +110,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      * Logout API
      * @queryParam required: api_token
      */
-    Route::post('logout', [UserController::class, 'logout']);
+    Route::get('logout', [UserController::class, 'logout']);
 
     /**
      * User's information API
@@ -133,7 +143,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     /**
      * Add a specific job API 
      * For page 'Add job' of recruiter
-     * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, job_place, salary, date_expire, job_keyword[keyword, weight]
+     * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, work_time, job_place, salary, date_expire, job_keyword[keyword, weight]
+     * Note: if job's work time is fulltime (value: 'f') else is parttime (value: 'p')
      */
     Route::post('recruiter/job/add', [JobDetailController::class, 'store']);
 
@@ -154,7 +165,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     /**
      * Update a job which had added API 
      * For page 'Add job' when click submit edit of recruiter
-     * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, job_place, salary, date_expire, job_keyword[keyword, weight]
+     * @queryParam required: api_token, job_title, job_descrip, job_require, job_benefit, work_time, job_place, salary, date_expire, job_keyword[keyword, weight]
      */
     Route::post('recruiter/job/update/{job_id}', [JobDetailController::class, 'update']);
 
@@ -169,7 +180,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      * Add a specific question API 
      * For page 'Add question' of recruiter
      * @queryParam required: api_token, type_id, ques_content, ques_option[opt_content, correct]
-     * Notes: 'type_id' in table 'question_types', if apptitude question (type_id is 1,2,3) then param 'ques_option' must have, if option correct is 1 else 0
+     * Notes: 'type_id' in table 'question_types', if aptitude question (type_id is 1,2,3) then param 'ques_option' must have, if option correct is 1 else 0
      */
     Route::post('recruiter/ques/add', [QuestionDetailController::class, 'store']);
 
@@ -206,9 +217,17 @@ Route::group(['middleware' => 'auth:api'], function () {
     /**
      * Upload a specific CV file (.pdf) and return result API 
      * For page 'Job details' of candidate
-     * @queryParam required: api_token, job_id, cv_file
+     * @queryParam required: api_token, job_id, cv_file, cv_new
+     * Note: cv_new default is null, if use new cv file then cv_new is true, else cv_new is false
      */
     Route::post('candidate/job/upload', [JobApplyController::class, 'store']);
+
+    /**
+     * Check if the candidate has applied or not API 
+     * For page 'Job details' of candidate
+     * @queryParam required: api_token
+     */
+    Route::get('candidate/apply/check', [JobApplyController::class, 'check']);
 
     /**
      * Get quiz API for candidate 

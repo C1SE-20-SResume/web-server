@@ -26,7 +26,6 @@ class JobApplyFactory extends Factory
         return [
             'user_id' => User::inRandomOrder()->value('id'),
             'job_id' => JobDetail::inRandomOrder()->value('id'),
-            'cv_file' => $this->faker->randomElement(['nguyenvana.pdf', 'nguyenthib.docx', 'tranvanc.png', 'vothid.jpeg']),
             'cv_score'=> $this->faker->numberBetween(0.5, 5.5),
             'pass_status' => $this->faker->randomElement([0, 1]),
         ];

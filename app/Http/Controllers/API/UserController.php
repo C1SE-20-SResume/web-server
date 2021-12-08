@@ -34,15 +34,15 @@ class UserController extends Controller
             $data = null;
             if ($user->role_level == 0) {
                 $results = $user->result;
-                $apptitude_score = null;
+                $aptitude_score = null;
                 $personality_score = null;
                 foreach ($results as $result) {
                     if ($result->type_id == 1 || $result->type_id == 2 || $result->type_id == 3) {
-                        $apptitude_score = $apptitude_score + $result->ques_score;
+                        $aptitude_score = $aptitude_score + $result->ques_score;
                     } else $personality_score = $personality_score + $result->ques_score;
                 }
                 $data = json_decode(json_encode([
-                    'apptitude_score' => $apptitude_score,
+                    'aptitude_score' => $aptitude_score,
                     'personality_score' => $personality_score,
                     'full_name' => $user->full_name,
                     'gender' => $user->gender,
@@ -120,7 +120,7 @@ class UserController extends Controller
             $check_user = User::where('email', $request['email'])->get();
             if ($check_user->count() == 0 && isset($request['password'])) {
                 $request = $request->only('full_name', 'gender', 'date_birth', 'phone_number', 'email', 'password');
-                User::create([
+                $user = User::create([
                     'full_name' => $request['full_name'],
                     'gender' => $request['gender'],
                     'date_birth' => $request['date_birth'],
@@ -132,6 +132,7 @@ class UserController extends Controller
                     'success' => true,
                     'message' => 'Register successful'
                 ]);
+                event(new Registered($user));
             } else {
                 return response()->json([
                     'success' => false,

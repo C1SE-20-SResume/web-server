@@ -24,20 +24,20 @@ class JobDetailController extends Controller
         $data = [];
         $currentTime = now();
         foreach ($jobs as $job) {
-            if ($job->date_expire >= $currentTime->toDateTimeString()) {
-                $company = $job->company;
-                $data[] = json_decode(json_encode([
-                    'job_id' => $job->id,
-                    'company_name' => $company->company_name,
-                    'logo_url' => $company->logo_url,
-                    'job_title' => $job->job_title,
-                    'job_place' => $job->job_place,
-                    'salary' => $job->salary,
-                    'date_expire' => $job->date_expire,
-                    'created_at' => $job->created_at->toDateTimeString(),
-                    'updated_at' => $job->updated_at->toDateTimeString(),
-                ]));
-            }
+            $company = $job->company;
+            $data[] = json_decode(json_encode([
+                'job_id' => $job->id,
+                'expired' => $job->date_expire < $currentTime->toDateTimeString() ? true:false,
+                'company_name' => $company->company_name,
+                'logo_url' => $company->logo_url,
+                'job_title' => $job->job_title,
+                'work_time' => $job->work_time,
+                'job_place' => $job->job_place,
+                'salary' => $job->salary,
+                'date_expire' => $job->date_expire,
+                'created_at' => $job->created_at->toDateTimeString(),
+                'updated_at' => $job->updated_at->toDateTimeString(),
+            ]));
         }
         $countOfJobs = count($data);
         return response()->json([
@@ -65,7 +65,7 @@ class JobDetailController extends Controller
      */
     public function store(Request $request)
     {
-        $request = $request->only('job_title', 'job_descrip', 'job_require', 'job_benefit', 'job_place', 'salary', 'date_expire', 'job_keyword');
+        $request = $request->only('job_title', 'job_descrip', 'job_require', 'job_benefit', 'work_time', 'job_place', 'salary', 'date_expire', 'job_keyword');
         if ($request['salary'] >= 0 && isset($request['date_expire']) && isset($request['job_keyword'])) {
             $user = Auth::user();
             $company = $user->company;
@@ -75,6 +75,7 @@ class JobDetailController extends Controller
                 'job_descrip' => $request['job_descrip'],
                 'job_require' => $request['job_require'],
                 'job_benefit' => $request['job_benefit'],
+                'work_time' => $request['work_time'],
                 'job_place' => $request['job_place'],
                 'salary' => $request['salary'],
                 'date_expire' => $request['date_expire'],
@@ -135,6 +136,7 @@ class JobDetailController extends Controller
                 'job_descrip' => $job->job_descrip,
                 'job_require' => $job->job_require,
                 'job_benefit' => $job->job_benefit,
+                'work_time' => $job->work_time,
                 'job_place' => $job->job_place,
                 'salary' => $job->salary,
                 'date_expire' => $job->date_expire,
@@ -179,6 +181,7 @@ class JobDetailController extends Controller
                 'job_descrip' => $job->job_descrip,
                 'job_require' => $job->job_require,
                 'job_benefit' => $job->job_benefit,
+                'work_time' => $job->work_time,
                 'job_place' => $job->job_place,
                 'salary' => $job->salary,
                 'date_expire' => $job->date_expire,
@@ -207,6 +210,7 @@ class JobDetailController extends Controller
                 $data[] = json_decode(json_encode([
                     'id' => $job->id,
                     'job_title' => $job->job_title,
+                    'work_time' => $job->work_time,
                     'job_place' => $job->job_place,
                     'salary' => $job->salary,
                     'date_expire' => $job->date_expire,
@@ -238,7 +242,7 @@ class JobDetailController extends Controller
     {
         // $user = Auth::user();
         // $company = $user->company;
-        $request_job = $request->only('job_title', 'job_descrip', 'job_require', 'job_benefit', 'job_place', 'salary', 'date_expire');
+        $request_job = $request->only('job_title', 'job_descrip', 'job_require', 'job_benefit', 'work_time', 'job_place', 'salary', 'date_expire');
         $request_keyword = $request['job_keyword'];
         if (isset($request_job['date_expire']) && $request_job['salary'] >= 0) {
             $job = JobDetail::where('id', $job_id)->first();
@@ -314,6 +318,7 @@ class JobDetailController extends Controller
                 'company_name' => $company->company_name,
                 'logo_url' => $company->logo_url,
                 'job_title' => $job->job_title,
+                'work_time' => $job->work_time,
                 'job_place' => $job->job_place,
                 'salary' => $job->salary,
                 'date_expire' => $job->date_expire,

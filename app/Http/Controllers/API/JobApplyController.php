@@ -55,6 +55,7 @@ class JobApplyController extends Controller
                 $applies[] = json_decode(json_encode([
                     'job_id' => $job->id,
                     'job_title' => $job->job_title,
+                    'work_time' => $job->work_time,
                     'job_place' => $job->job_place,
                     'salary' => $job->salary,
                     'date_expire' => $job->date_expire,
@@ -86,6 +87,26 @@ class JobApplyController extends Controller
     }
 
     /**
+     * .
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function check()
+    {
+        $user = Auth::user();
+        if(count($user->apply) >0) {
+            return response()->json([
+                'success' => true,
+                'applied' => true,
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'applied' => false,
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -94,7 +115,7 @@ class JobApplyController extends Controller
     public function store(Request $request)
     {
         // $request = $request->only('user_id', 'job_id', 'cv_file');
-        if (isset($request['job_id']) && $request->hasFile('cv_file')) {
+        if (isset($request['job_id'])) {
             // Check job has expired or not
             $currentTime = now();
             $job = JobDetail::where('id', $request['job_id'])->first();
@@ -127,19 +148,30 @@ class JobApplyController extends Controller
                     'message' => 'You have not done both types of quizzes',
                 ]);
             }
-            // Save cv file
-            $request->validate([
-                'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
-            ]);
-            $filenameWithExt = $request->file('cv_file')->getClientOriginalName();
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('cv_file')->getClientOriginalExtension();
-            $fileNameToStore = time() . uniqid() . '_' . $filename . '.' . $extension;
-            $request->file('cv_file')->move('cv_uploads', $fileNameToStore);
-            $filePath = 'cv_uploads/' . $fileNameToStore;
-            // $filePath = 'cv_uploads/NguyenNgocThanh_CV_Full_1635460356.pdf';
+            $filePath = null;
+            $mimetype = null;
+            // Check first time upload or use new cv file
+            if((!isset($request['cv_new']) || $request['cv_new'] == true) && $request->hasFile('cv_file')) {
+                $request->validate([
+                    'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
+                ]);
+                // Save cv file
+                $filenameWithExt = $request->file('cv_file')->getClientOriginalName();
+                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('cv_file')->getClientOriginalExtension();
+                $fileNameToStore = time() . uniqid() . '_' . $filename . '.' . $extension;
+                $request->file('cv_file')->move('cv_uploads', $fileNameToStore);
+                $filePath = 'cv_uploads' . '\\' . $fileNameToStore;
+                // $filePath = 'cv_uploads/NguyenNgocThanh_CV_Full_1635460356.pdf';
+                $mimetype = $request->file('cv_file')->getClientMimeType();
+            }
+            else if($request['cv_new'] == false) {
+                $apply_latest = JobApply::where('user_id', $user->id)->latest()->first();
+                $filePath = $apply_latest->cv_file;
+                // $filePath = public_path() . '\\' . $filePath;
+                $mimetype = mime_content_type($filePath);
+            }
             $text = "";
-            $mimetype = $request->file('cv_file')->getClientMimeType();
             // PDF files
             if ($mimetype == 'application/pdf') {
                 $parser = new Parser();
@@ -175,10 +207,12 @@ class JobApplyController extends Controller
             $keywords = JobKeyword::where('job_id', $request['job_id'])->get();
             // Score for cv file
             $cv_weight = 0;
+            $keyword_found = [];
             foreach ($keywords as $keyword) {
                 $word = strtolower($keyword->keyword);
                 // $contains = Str::contains($text, 'keyword');
                 if (str_contains($text, $word) == true) {
+                    array_push($keyword_found, $word);
                     if ($keyword->priority_weight == 1) {
                         $cv_weight = $cv_weight + 0.5;
                     } else if ($keyword->priority_weight == 2) {
@@ -212,10 +246,10 @@ class JobApplyController extends Controller
                 ->get();
             return response()->json([
                 'success' => true,
-                'require_score' => $job->require_score,
-                'cv_score' => $cv_weight,
-                'cv_pass' => $pass_status,
+                'keyword_found' => $keyword_found,
+                'cv_score' => $cv_weight . '/' . $job->require_score,
                 'rank' => $ranks->where('user_id', $user->id)->first()->rank,
+                'cv_pass' => $pass_status,
             ]);
         }
         return response()->json([
@@ -239,12 +273,12 @@ class JobApplyController extends Controller
             foreach ($applies as $apply) {
                 $user = $apply->user;
                 $results = $user->result;
-                $apptitude_score = [];
+                $aptitude_score = [];
                 $personality_score = [];
                 foreach ($results as $result) {
                     if ($result->type_id == 1 || $result->type_id == 2 || $result->type_id == 3) {
                         $type = $result->type;
-                        $apptitude_score[] = json_decode(json_encode([
+                        $aptitude_score[] = json_decode(json_encode([
                             'type_name' => $type->type_name,
                             'score' => $result->ques_score,
                         ]));
@@ -268,7 +302,7 @@ class JobApplyController extends Controller
                     'pass_status' => $apply->pass_status,
                     'apply_created_at' => $apply->created_at->toDateTimeString(),
                     'apply_updated_at' => $apply->updated_at->toDateTimeString(),
-                    'apptitude_score' => $apptitude_score,
+                    'aptitude_score' => $aptitude_score,
                     'personality_score' => $personality_score,
                 ]));
             }
