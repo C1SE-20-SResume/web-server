@@ -100,7 +100,7 @@ Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke
 // Resend link to verify email
 Route::post('/email/verify/resend', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
-    return response()->json(['message' => 'Please check your email to verify your account.']);
+    return response()->json(["success" => true, "message" => "Email verification link has been sent to your email."]);
 })->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
 
 
