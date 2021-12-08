@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
+use Illuminate\Auth\Events\Registered;
 
 /**
  * @group Auth API
@@ -128,11 +128,19 @@ class UserController extends Controller
                     'email' => $request['email'],
                     'password' => Hash::make($request['password']),
                 ]);
+
+                event(new Registered($user));
+
+                // login user
+                $api_token = Str::random(60);
+                $user->api_token = $api_token;
+                $user->save();
+
                 return response()->json([
                     'success' => true,
-                    'message' => 'Register successful'
+                    'message' => 'Register successful',
+                    'access_token' => $api_token
                 ]);
-                event(new Registered($user));
             } else {
                 return response()->json([
                     'success' => false,

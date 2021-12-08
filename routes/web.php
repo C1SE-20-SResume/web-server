@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ResetPasswordController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,6 +20,3 @@ Route::post('reset-password', [ResetPasswordController::class, 'updatePassword']
 Route::get('/{any}', function () {
     return view('app');
 })->where('any', '.*');
-// })->where('any', '.*:not(reset-password)');
-
-Auth::routes(['verify' => true]);
