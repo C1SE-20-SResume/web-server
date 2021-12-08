@@ -31,8 +31,12 @@ class AdminController extends Controller
     {
         // check if isAdmin
         $user = User::where('email', $request->email)->first();
-
         if ($user->isAdmin() && Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+            if($user->email_verified_at == null) {
+                return response()->json([
+                    'message' => 'Your email is not verified yet',
+                ]);
+            }
             $api_token = Str::random(60);
             $user->api_token = $api_token;
             $user->save();
@@ -40,7 +44,8 @@ class AdminController extends Controller
                 'message' => 'Admin login successfully',
                 'api_token' => $api_token,
             ], 200);
-        } else {
+        } 
+        else {
             return response()->json([
                 'message' => 'You are not admin'
             ], 401);

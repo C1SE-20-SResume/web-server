@@ -31,14 +31,14 @@ use App\Http\Controllers\API\VerifyEmailController;
 // });
 
 
-Route::group(['middleware' => 'verified'], function () {
+// Route::group(['middleware' => 'verified'], function () {
     /**
      * Login API
      * @queryParam required: email, password
      * Password default: password
      */
     Route::post('login', [UserController::class, 'login']);
-});
+// });
 
 
 /**

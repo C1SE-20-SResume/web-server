@@ -301,7 +301,7 @@ export default {
                         console.log("a");
                     }
                 } else {
-                    this.error = "You are not admin";
+                    this.error = data.message;
                 }
             } catch (error) {
                 this.error = error.message;

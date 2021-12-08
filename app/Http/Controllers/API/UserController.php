@@ -93,6 +93,12 @@ class UserController extends Controller
     {
         $request = $request->only('email', 'password');
         if (Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+            if(User::where('email', $request['email'])->first()->email_verified_at == null) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Your email is not verified yet',
+                ]);
+            }
             $api_token = Str::random(60);
             $user = Auth::user();
             $user->api_token = $api_token;

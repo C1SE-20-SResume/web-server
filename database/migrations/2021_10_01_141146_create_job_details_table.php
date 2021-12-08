@@ -20,7 +20,7 @@ class CreateJobDetailsTable extends Migration
             $table->text('job_descrip');
             $table->text('job_require');
             $table->text('job_benefit');
-            $table->char('work_time', 1);
+            $table->char('work_time', 1)->default('f');
             $table->string('job_place');
             $table->double('salary');
             $table->dateTime('date_expire');
