@@ -94,7 +94,7 @@ class JobApplyController extends Controller
     public function check()
     {
         $user = Auth::user();
-        if(count($user->apply) >0) {
+        if (count($user->apply) > 0) {
             return response()->json([
                 'success' => true,
                 'applied' => true,
@@ -151,7 +151,7 @@ class JobApplyController extends Controller
             $filePath = null;
             $mimetype = null;
             // Check first time upload or use new cv file
-            if((!isset($request['cv_new']) || $request['cv_new'] == true) && $request->hasFile('cv_file')) {
+            if ((!isset($request['cv_new']) || $request['cv_new'] == true) && $request->hasFile('cv_file')) {
                 $request->validate([
                     'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
                 ]);
@@ -164,8 +164,7 @@ class JobApplyController extends Controller
                 $filePath = 'cv_uploads' . '\\' . $fileNameToStore;
                 // $filePath = 'cv_uploads/NguyenNgocThanh_CV_Full_1635460356.pdf';
                 $mimetype = $request->file('cv_file')->getClientMimeType();
-            }
-            else if($request['cv_new'] == false) {
+            } else if ($request['cv_new'] == false) {
                 $apply_latest = JobApply::where('user_id', $user->id)->latest()->first();
                 $filePath = $apply_latest->cv_file;
                 // $filePath = public_path() . '\\' . $filePath;
