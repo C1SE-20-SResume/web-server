@@ -168,7 +168,8 @@ class JobApplyController extends Controller
                 $mimetype = $request->file('cv_file')->getClientMimeType();
             } else if ($request['cv_new'] == false) {
                 $apply_latest = JobApply::where('user_id', $user->id)->latest()->first();
-                $filePath = public_path($apply_latest->cv_file);
+                $filePathToStore = $apply_latest->cv_file;
+                $filePath = public_path($filePathToStore);
                 // $filePath = public_path() . '\\' . $filePath;
                 $mimetype = mime_content_type($filePath);
             }
