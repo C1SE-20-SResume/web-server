@@ -161,13 +161,13 @@ class JobApplyController extends Controller
                 $extension = $request->file('cv_file')->getClientOriginalExtension();
                 $fileNameToStore = time() . uniqid() . '_' . $filename . '.' . $extension;
                 $request->file('cv_file')->move('cv_uploads', $fileNameToStore);
-                $filePath = 'cv_uploads' . '\\' . $fileNameToStore;
-                // $filePath = 'cv_uploads/NguyenNgocThanh_CV_Full_1635460356.pdf';
+                $filePath = public_path('cv_uploads' . '\\' . $fileNameToStore);
+                // $filePath = public_path('cv_uploads\NguyenNgocThanh_CV_Full_1635460356.pdf');
                 $mimetype = $request->file('cv_file')->getClientMimeType();
             }
             else if($request['cv_new'] == false) {
                 $apply_latest = JobApply::where('user_id', $user->id)->latest()->first();
-                $filePath = $apply_latest->cv_file;
+                $filePath = public_path($apply_latest->cv_file);
                 // $filePath = public_path() . '\\' . $filePath;
                 $mimetype = mime_content_type($filePath);
             }
