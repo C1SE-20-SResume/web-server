@@ -152,7 +152,7 @@ class JobApplyController extends Controller
             $filePathToStore = null;
             $mimetype = null;
             // Check first time upload or use new cv file
-            if ((!isset($request['cv_new']) || $request['cv_new'] == true) && $request->hasFile('cv_file')) {
+            if ((!isset($request['cv_new']) || $request['cv_new'] == 'true') && $request->hasFile('cv_file')) {
                 $request->validate([
                     'cv_file' => 'required|mimes:txt,doc,docx,pdf,png,jpg,jpeg'
                 ]);
@@ -166,7 +166,7 @@ class JobApplyController extends Controller
                 $filePath = public_path($filePathToStore);
                 // $filePath = public_path('cv_uploads\NguyenNgocThanh_CV_Full_1635460356.pdf');
                 $mimetype = $request->file('cv_file')->getClientMimeType();
-            } else if ($request['cv_new'] == false) {
+            } else if ($request['cv_new'] == 'false') {
                 $apply_latest = JobApply::where('user_id', $user->id)->latest()->first();
                 $filePathToStore = $apply_latest->cv_file;
                 $filePath = public_path($filePathToStore);
