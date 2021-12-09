@@ -149,6 +149,7 @@ class JobApplyController extends Controller
                 ]);
             }
             $filePath = null;
+            $filePathToStore = null;
             $mimetype = null;
             // Check first time upload or use new cv file
             if((!isset($request['cv_new']) || $request['cv_new'] == true) && $request->hasFile('cv_file')) {
@@ -161,7 +162,8 @@ class JobApplyController extends Controller
                 $extension = $request->file('cv_file')->getClientOriginalExtension();
                 $fileNameToStore = time() . uniqid() . '_' . $filename . '.' . $extension;
                 $request->file('cv_file')->move('cv_uploads', $fileNameToStore);
-                $filePath = public_path('cv_uploads' . '\\' . $fileNameToStore);
+                $filePathToStore = 'cv_uploads/' . $fileNameToStore;
+                $filePath = public_path($filePathToStore);
                 // $filePath = public_path('cv_uploads\NguyenNgocThanh_CV_Full_1635460356.pdf');
                 $mimetype = $request->file('cv_file')->getClientMimeType();
             }
@@ -234,7 +236,7 @@ class JobApplyController extends Controller
             JobApply::create([
                 'user_id' => $user->id,
                 'job_id' => $request['job_id'],
-                'cv_file' => $filePath,
+                'cv_file' => $filePathToStore,
                 'cv_score' => $cv_weight,
                 'pass_status' => $pass_status,
             ]);
