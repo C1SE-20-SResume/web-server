@@ -36,6 +36,7 @@
                             </tr>
                         </thead>
                         <tbody
+                            v-if="question.aptitude"
                             class="
                                 bg-white
                                 divide-y
@@ -87,6 +88,100 @@
                             </template>
                         </tbody>
                     </table>
+                    <div v-if="!question.aptitude" class="w-full text-center">
+                        <p
+                            class="
+                                text-gray-700
+                                dark:text-gray-400
+                                text-sm
+                                font-semibold
+                                tracking-wide
+                            "
+                        >
+                            Loading...
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="my-5"></div>
+            <div class="w-full overflow-hidden rounded-lg shadow-xs">
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full whitespace-no-wrap">
+                        <thead>
+                            <tr
+                                class="
+                                    text-xs
+                                    font-semibold
+                                    tracking-wide
+                                    text-left text-gray-500
+                                    uppercase
+                                    border-b
+                                    dark:border-gray-700
+                                    bg-gray-50
+                                    dark:text-gray-400 dark:bg-gray-800
+                                "
+                            >
+                                <th class="px-4 py-3">Type</th>
+                                <th class="px-4 py-3">Content</th>
+                            </tr>
+                        </thead>
+
+                        <tbody
+                            v-if="question.personality"
+                            class="
+                                bg-white
+                                divide-y
+                                dark:divide-gray-700 dark:bg-gray-800
+                            "
+                        >
+                            <template
+                                v-for="item in question.personality"
+                                :key="item.ques_id"
+                            >
+                                <tr class="text-gray-700 dark:text-gray-400">
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center text-sm">
+                                            <p
+                                                class="
+                                                    font-semibold
+                                                    dark:text-white
+                                                    capitalize
+                                                "
+                                            >
+                                                {{ item.type_name }}
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <p
+                                            class="
+                                                font-semibold
+                                                dark:text-white
+                                            "
+                                        >
+                                            {{ item.ques_content }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    <div
+                        v-if="!question.personality"
+                        class="w-full text-center"
+                    >
+                        <p
+                            class="
+                                text-gray-700
+                                dark:text-gray-400
+                                text-sm
+                                font-semibold
+                                tracking-wide
+                            "
+                        >
+                            Loading...
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -94,9 +189,9 @@
             v-show="openForm"
             class="
                 absolute
-                top-1/2
+                top-0
                 left-1/2
-                -translate-y-1/2 -translate-x-1/2
+                -translate-x-1/2
                 transform
                 bg-white
                 rounded-xl
@@ -127,34 +222,41 @@ export default {
 
     methods: {
         oForm(data) {
-            this.openForm = true;
-            // insert data to ref Form
-            let form = document.getElementById("formView");
-            let title = document.createElement("h3");
-            title.className = "text-2xl font-semibold text-gray-800 mb-4";
-            title.innerHTML = "List Option";
-            form.appendChild(title);
-            data.forEach((item) => {
-                let div = document.createElement("div");
-                div.className = "flex flex-col";
-                div.innerHTML = `
+            if (this.openForm === true) {
+                alert("Please close the current form");
+                return;
+            } else {
+                this.openForm = true;
+                // insert data to ref Form
+                let form = document.getElementById("formView");
+                let title = document.createElement("h3");
+                title.className = "text-2xl font-semibold text-gray-800 mb-4";
+                title.innerHTML = "List Option";
+                form.appendChild(title);
+                data.forEach((item) => {
+                    let div = document.createElement("div");
+                    div.className = "flex flex-col";
+                    div.innerHTML = `
                     <div class="flex flex-col mb-4">
                         <p class="text-gray-800">
-                            - ${item.option_content}
+                            - ${item.option_content} : ${
+                        item.option_correct === 1 ? "Correct" : "Incorrect"
+                    }
                         </p>
                     </div>
                 `;
-                form.appendChild(div);
-            });
-            let close = document.createElement("button");
-            close.className =
-                "text-white bg-gray-800 px-5 py-1 rounded-full mt-4 hover:text-gray-800 hover:bg-gray-200 transition-all duration-300";
-            close.innerHTML = "Close";
-            close.addEventListener("click", () => {
-                this.openForm = false;
-                form.innerHTML = "";
-            });
-            form.appendChild(close);
+                    form.appendChild(div);
+                });
+                let close = document.createElement("button");
+                close.className =
+                    "text-white bg-gray-800 px-5 py-1 rounded-full mt-4 hover:text-gray-800 hover:bg-gray-200 transition-all duration-300";
+                close.innerHTML = "Close";
+                close.addEventListener("click", () => {
+                    this.openForm = false;
+                    form.innerHTML = "";
+                });
+                form.appendChild(close);
+            }
         },
     },
 };
