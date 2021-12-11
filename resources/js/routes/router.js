@@ -13,7 +13,7 @@ import {
     listCompany,
     listQuestion,
     Scan,
-    ResetPassword,
+    listUser,
 } from "../pages";
 import { Login } from "../auth";
 const routes = [
@@ -45,6 +45,11 @@ const routes = [
                 path: "job/:id",
                 name: "single-job",
                 component: SingleJob,
+            },
+            {
+                path: "/list-user",
+                name: "list-user",
+                component: listUser,
             },
         ],
     },

@@ -57,4 +57,7 @@ export default {
     async scanCV(payload) {
         return authClient.post("/api/admin/scan", payload);
     },
+    async getListUser() {
+        return authClient.get("/api/admin/listUser");
+    },
 };

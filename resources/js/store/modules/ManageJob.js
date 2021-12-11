@@ -64,6 +64,14 @@ export const actions = {
             console.log(error);
         }
     },
+    async getListUser({ commit }) {
+        try {
+            const response = await JobService.getListUser();
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    },
 };
 
 export const getters = {
