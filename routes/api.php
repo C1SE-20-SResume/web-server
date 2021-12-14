@@ -50,7 +50,7 @@ Route::post('register', [UserController::class, 'register']);
 /**
  * Forget password View
  * Note: API is used only for forget password template, not need to call
- * Không cần gọi cái này nha Đô
+ * Không cn gọi cái này nha Đô
  */
 Route::get('forget-password', [ForgotPasswordController::class, 'getEmail'])
     ->name('forget-password');

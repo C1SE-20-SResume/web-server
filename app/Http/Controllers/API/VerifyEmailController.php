@@ -21,7 +21,7 @@ class VerifyEmailController extends Controller
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
-
+        dd(env('FRONT_URL'));
         return redirect(env('FRONT_URL') . '/email/verify/success');
     }
 }
