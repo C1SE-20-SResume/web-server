@@ -13,7 +13,7 @@ use App\Http\Controllers\API\QuestionResultController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\API\ManagePageController;
-use App\Http\Controllers\API\VerifyEmailController;
+// use App\Http\Controllers\API\VerifyEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,12 +32,12 @@ use App\Http\Controllers\API\VerifyEmailController;
 
 
 // Route::group(['middleware' => 'verified'], function () {
-    /**
-     * Login API
-     * @queryParam required: email, password
-     * Password default: password
-     */
-    Route::post('login', [UserController::class, 'login']);
+/**
+ * Login API
+ * @queryParam required: email, password
+ * Password default: password
+ */
+Route::post('login', [UserController::class, 'login']);
 // });
 
 
@@ -91,17 +91,16 @@ Route::get('popularjob', [JobDetailController::class, 'homepage']);
  */
 Route::get('statistic', [ManagePageController::class, 'statistic']);
 
+// // Verify email
+// Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
+//     // ->middleware(['signed', 'throttle:6,1'])
+//     ->name('verification.verify');
 
-// Verify email
-Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-    ->middleware(['signed', 'throttle:6,1'])
-    ->name('verification.verify');
-
-// Resend link to verify email
-Route::post('/email/verify/resend', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-    return response()->json(["success" => true, "message" => "Email verification link has been sent to your email."]);
-})->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
+// // Resend link to verify email
+// Route::post('/email/verify/resend', function (Request $request) {
+//     $request->user()->sendEmailVerificationNotification();
+//     return response()->json(["success" => true, "message" => "Email verification link has been sent to your email."]);
+// })->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
 
 
 Route::group(['middleware' => 'auth:api'], function () {
