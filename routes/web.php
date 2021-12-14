@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use Illuminate\Http\Request;
+use App\Http\Controllers\API\VerifyEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +23,4 @@ Route::get('/{any}', function () {
     return view('app');
 })->where('any', '.*');
 
-Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => true]);

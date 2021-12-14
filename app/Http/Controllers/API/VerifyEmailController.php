@@ -13,6 +13,7 @@ class VerifyEmailController extends Controller
     public function __invoke(Request $request): RedirectResponse
     {
         $user = User::find($request->route('id'));
+        // dd($request->route('id'));
 
         if ($user->hasVerifiedEmail()) {
             return redirect(env('FRONT_URL') . '/email/verify/already-success');

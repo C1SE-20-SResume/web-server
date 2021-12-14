@@ -32,12 +32,12 @@ use App\Http\Controllers\API\VerifyEmailController;
 
 
 // Route::group(['middleware' => 'verified'], function () {
-    /**
-     * Login API
-     * @queryParam required: email, password
-     * Password default: password
-     */
-    Route::post('login', [UserController::class, 'login']);
+/**
+ * Login API
+ * @queryParam required: email, password
+ * Password default: password
+ */
+Route::post('login', [UserController::class, 'login']);
 // });
 
 
@@ -94,7 +94,7 @@ Route::get('statistic', [ManagePageController::class, 'statistic']);
 
 // Verify email
 Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-    ->middleware(['signed', 'throttle:6,1'])
+    // ->middleware(['signed', 'throttle:6,1'])
     ->name('verification.verify');
 
 // Resend link to verify email
