@@ -381,4 +381,21 @@ class JobApplyController extends Controller
     {
         //
     }
+
+    /**
+     * Download CV file API
+     *
+     */
+    public function downCV (Request $request)
+    {
+        // $request['cv_path'] = 'cv_uploads/16358412516180f4e33f2e8_Capture.png';
+        $fileName = substr($request['cv_path'], 35);
+        //File is stored under /public/cv_uploads/
+        $filePath = public_path($request['cv_path']);
+        $mimetype = mime_content_type($filePath);
+        $headers = [
+            'Content-Type' => $mimetype,
+         ];
+        return response()->download($filePath, $fileName, $headers);
+    }
 }

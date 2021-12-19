@@ -102,6 +102,12 @@ Route::get('statistic', [ManagePageController::class, 'statistic']);
 //     return response()->json(["success" => true, "message" => "Email verification link has been sent to your email."]);
 // })->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
 
+/**
+ * Download CV file API 
+ * @queryParam required: cv_path
+ */
+Route::get('downcv', [JobApplyController::class, 'downCV']);
+
 
 Route::group(['middleware' => 'auth:api'], function () {
 
