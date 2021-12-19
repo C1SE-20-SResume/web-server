@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use App\Models\UserCompany;
+use Illuminate\Support\Arr;
 
 /**
  * @group Auth API
@@ -37,14 +38,23 @@ class UserController extends Controller
                 $results = $user->result;
                 $aptitude_score = null;
                 $personality_score = null;
+                $aptitude_graph = [];
+                $personality_graph = [];
                 foreach ($results as $result) {
+                    $type = $result->type;
                     if ($result->type_id == 1 || $result->type_id == 2 || $result->type_id == 3) {
                         $aptitude_score = $aptitude_score + $result->ques_score;
-                    } else $personality_score = $personality_score + $result->ques_score;
+                        $aptitude_graph = Arr::add($aptitude_graph, $type->type_name, $result->ques_score);
+                    } else {
+                        $personality_score = $personality_score + $result->ques_score;
+                        $personality_graph = Arr::add($personality_graph, $type->type_name, $result->ques_score);
+                    }
                 }
                 $data = json_decode(json_encode([
-                    'aptitude_score' => $aptitude_score,
-                    'personality_score' => $personality_score,
+                    'aptitude_score' => $aptitude_score.'/15',
+                    'personality_score' => $personality_score.'/75',
+                    'aptitude_graph' => $aptitude_graph,
+                    'personality_graph' => $personality_graph,
                     'full_name' => $user->full_name,
                     'gender' => $user->gender,
                     'date_birth' => $user->date_birth,
