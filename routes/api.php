@@ -129,6 +129,13 @@ Route::group(['middleware' => 'auth:api'], function () {
      */
     Route::post('password/change', [HomeController::class, 'changePassword']);
 
+    /** 
+     * Update profile API
+     * @queryParam required: api_token, full_name, gender, date_birth, phone_number, company_name, logo_url
+     * Note: if user is candidate then 'company_name', 'logo_url' params is not need define
+     */
+    Route::post('user/profile', [UserController::class, 'profile']);
+
 
     //---API OF RECRUITER---
     /**

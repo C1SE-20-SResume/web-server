@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
+use App\Models\UserCompany;
 
 /**
  * @group Auth API
@@ -171,6 +172,34 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Logout successful'
+        ]);
+    }
+
+    /**
+     * Update profile API
+     *
+     * @return void
+     */
+    public function profile(Request $request)
+    {
+        if (Auth::guard('api')->check()) {
+            $user = Auth::guard('api')->user();
+
+            $request_info = $request->only('full_name', 'gender', 'date_birth', 'phone_number');
+            $user_update = User::find($user->id);
+            $user_update->update($request_info);
+            if ($user->role_level == 1) {
+                $request_company = $request->only('company_name', 'logo_url');
+                $company_update = UserCompany::find($user->company->id);
+                $company_update->update($request_company);
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Update profile successful'
+            ]);
+        }
+        return response()->json([
+            'success' => false,
         ]);
     }
 }
