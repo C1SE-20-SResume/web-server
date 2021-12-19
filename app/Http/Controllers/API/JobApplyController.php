@@ -212,21 +212,38 @@ class JobApplyController extends Controller
             // Score for cv file
             $cv_weight = 0;
             $keyword_found = [];
+            $keyword_not_found = [];
             foreach ($keywords as $keyword) {
                 $word = strtolower($keyword->keyword);
                 // $contains = Str::contains($text, 'keyword');
                 if (str_contains($text, $word) == true) {
-                    array_push($keyword_found, $word);
                     if ($keyword->priority_weight == 1) {
                         $cv_weight = $cv_weight + 0.5;
+                        array_push($keyword_found, $word.' (0.5/0.3)');
                     } else if ($keyword->priority_weight == 2) {
                         $cv_weight = $cv_weight + 1;
+                        array_push($keyword_found, $word.' (1/0.7)');
                     } else if ($keyword->priority_weight == 3) {
                         $cv_weight = $cv_weight + 1.5;
+                        array_push($keyword_found, $word.' (1.5/1.15)');
                     } else if ($keyword->priority_weight == 4) {
                         $cv_weight = $cv_weight + 2;
+                        array_push($keyword_found, $word.' (2/1.6)');
                     } else if ($keyword->priority_weight == 5) {
                         $cv_weight = $cv_weight + 2.5;
+                        array_push($keyword_found, $word.' (2.5/2)');
+                    }
+                } else {
+                    if ($keyword->priority_weight == 1) {
+                        array_push($keyword_not_found, $word.' (0/0.3)');
+                    } else if ($keyword->priority_weight == 2) {
+                        array_push($keyword_not_found, $word.' (0/0.7)');
+                    } else if ($keyword->priority_weight == 3) {
+                        array_push($keyword_not_found, $word.' (0/1.15)');
+                    } else if ($keyword->priority_weight == 4) {
+                        array_push($keyword_not_found, $word.' (0/1.6)');
+                    } else if ($keyword->priority_weight == 5) {
+                        array_push($keyword_not_found, $word.' (0/2)');
                     }
                 }
             }
@@ -251,8 +268,9 @@ class JobApplyController extends Controller
             return response()->json([
                 'success' => true,
                 'keyword_found' => $keyword_found,
+                'keyword_not_found' => $keyword_not_found,
                 'cv_score' => $cv_weight . '/' . $job->require_score,
-                'rank' => $ranks->where('user_id', $user->id)->first()->rank,
+                'rank' => $ranks->where('user_id', $user->id)->first()->rank . '/' . $ranks->count(),
                 'cv_pass' => $pass_status,
             ]);
         }
