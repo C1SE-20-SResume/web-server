@@ -46,7 +46,9 @@ class JobApplyController extends Controller
      */
     public function index()
     {
-        $jobs = JobDetail::all();
+        $user = Auth::user();
+        $company = $user->company;
+        $jobs = JobDetail::where('company_id', $company->id)->get();
         if ($jobs != null) {
             $applies = [];
             foreach ($jobs as $job) {

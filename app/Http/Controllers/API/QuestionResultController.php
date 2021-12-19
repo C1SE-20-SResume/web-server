@@ -124,6 +124,7 @@ class QuestionResultController extends Controller
             $user = Auth::user();
             $ques_result = $request['ques_result'];
             $ques_result = json_decode(json_encode($ques_result));
+            // $ques_result = json_decode($ques_result);
             $results = [];
             foreach ($ques_result as $result) {
                 $results[] = QuestionResult::create([
