@@ -64,10 +64,15 @@ class UserController extends Controller
                     'updated_at' => $user->updated_at->toDateTimeString(),
                 ]));
             } else {
-                $company = $user->company;
+                $company_name = null;
+                $logo_url = null;
+                if($user->company != null) {
+                    $company_name = $user->company->company_name;
+                    $logo_url = $user->company->logo_url;
+                }
                 $data = json_decode(json_encode([
-                    'company_name' => $company->company_name,
-                    'logo_url' => $company->logo_url,
+                    'company_name' => $company_name,
+                    'logo_url' => $logo_url,
                     'full_name' => $user->full_name,
                     'gender' => $user->gender,
                     'date_birth' => $user->date_birth,
