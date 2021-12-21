@@ -27,6 +27,8 @@ class JobApply extends Model
         'cv_file',
         'cv_score',
         'pass_status',
+        'keyword_found',
+        'keyword_not_found',
     ];
 
     /**

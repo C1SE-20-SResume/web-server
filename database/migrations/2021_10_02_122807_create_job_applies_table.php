@@ -20,6 +20,8 @@ class CreateJobAppliesTable extends Migration
             $table->string('cv_file');
             $table->float('cv_score');
             $table->tinyInteger('pass_status');
+            $table->string('keyword_found')->nullable()->default(null);
+            $table->string('keyword_not_found')->nullable()->default(null);
             $table->timestamps();
         });
     }

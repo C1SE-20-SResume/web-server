@@ -258,6 +258,8 @@ class JobApplyController extends Controller
                 'cv_file' => $filePathToStore,
                 'cv_score' => $cv_weight,
                 'pass_status' => $pass_status,
+                'keyword_found' => implode(', ', $keyword_found),
+                'keyword_not_found' => implode(', ', $keyword_not_found),
             ]);
             // Ranking scan score for candidate's apply
             $ranks = JobApply::query()
