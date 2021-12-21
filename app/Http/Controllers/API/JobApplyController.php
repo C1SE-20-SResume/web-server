@@ -10,6 +10,7 @@ use App\Models\JobDetail;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\QuestionResult;
+use Illuminate\Support\Arr;
 
 /*
 * Import scan file class
@@ -297,21 +298,18 @@ class JobApplyController extends Controller
             foreach ($applies as $apply) {
                 $user = $apply->user;
                 $results = $user->result;
-                $aptitude_score = [];
-                $personality_score = [];
+                $aptitude_score = 0;
+                $personality_score = 0;
+                $aptitude_graph = [];
+                $personality_graph = [];
                 foreach ($results as $result) {
+                    $type = $result->type;
                     if ($result->type_id == 1 || $result->type_id == 2 || $result->type_id == 3) {
-                        $type = $result->type;
-                        $aptitude_score[] = json_decode(json_encode([
-                            'type_name' => $type->type_name,
-                            'score' => $result->ques_score,
-                        ]));
+                        $aptitude_score = $aptitude_score + $result->ques_score;
+                        $aptitude_graph = Arr::add($aptitude_graph, $type->type_name, $result->ques_score); 
                     } else {
-                        $type = $result->type;
-                        $personality_score[] = json_decode(json_encode([
-                            'type_name' => $type->type_name,
-                            'score' => $result->ques_score,
-                        ]));
+                        $personality_score = $personality_score + $result->ques_score;
+                        $personality_graph = Arr::add($personality_graph, $type->type_name, $result->ques_score);
                     }
                 }
                 $applies_user[] = json_decode(json_encode([
@@ -323,11 +321,15 @@ class JobApplyController extends Controller
                     'email' => $user->email,
                     'cv_file' => $apply->cv_file,
                     'cv_score' => $apply->cv_score,
+                    'keyword_found' => $apply->keyword_found,
+                    'keyword_not_found' => $apply->keyword_not_found,
                     'pass_status' => $apply->pass_status,
+                    'aptitude_score' => $aptitude_score . '/15',
+                    'personality_score' => $personality_score . '/75',
+                    'aptitude_graph' => $aptitude_graph,
+                    'personality_graph' => $personality_graph,
                     'apply_created_at' => $apply->created_at->toDateTimeString(),
                     'apply_updated_at' => $apply->updated_at->toDateTimeString(),
-                    'aptitude_score' => $aptitude_score,
-                    'personality_score' => $personality_score,
                 ]));
             }
             return response()->json([
