@@ -58,6 +58,7 @@ class ScanCV extends Controller
                 // $ocr->executable('C:\Program Files\Tesseract-OCR\tesseract.exe');
                 // $ocr->tessdataDir('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tessdata');
                 $text = $ocr->run(500);
+                $text = str_replace("\n", " ", $text);
             }
             $text = strtolower($text);
             // $text = mb_convert_encoding($text, "UTF-8", "auto");
