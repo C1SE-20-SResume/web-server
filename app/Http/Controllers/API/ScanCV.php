@@ -59,7 +59,7 @@ class ScanCV extends Controller
                 // $ocr->tessdataDir('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tessdata');
                 $text = $ocr->run(500);
             }
-            // $text = strtolower($text);
+            $text = strtolower($text);
             // $text = mb_convert_encoding($text, "UTF-8", "auto");
             // return response($text);
             return response()->json([
