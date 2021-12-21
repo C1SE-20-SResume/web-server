@@ -204,7 +204,7 @@ class JobApplyController extends Controller
                 // $ocr->executable('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tesseract.exe');
                 // Data trained folder path, if you want specify a custom location for the tessdata directory
                 // $ocr->tessdataDir('C:\Users\Ngoc Thanh\AppData\Local\Programs\Tesseract-OCR\tessdata');
-                $text = $ocr->run(500); // timeout: 500ms
+                $text = $ocr->run(); // timeout: 500ms
             }
             // $text = Str::lower($text); utf-8
             $text = strtolower($text);
@@ -222,13 +222,13 @@ class JobApplyController extends Controller
                         array_push($keyword_found, $word.' (0.5/0.3)');
                     } else if ($keyword->priority_weight == 2) {
                         $cv_weight = $cv_weight + 1;
-                        array_push($keyword_found, $word.' (1/0.7)');
+                        array_push($keyword_found, $word.' (1/0.65)');
                     } else if ($keyword->priority_weight == 3) {
                         $cv_weight = $cv_weight + 1.5;
-                        array_push($keyword_found, $word.' (1.5/1.15)');
+                        array_push($keyword_found, $word.' (1.5/1.05)');
                     } else if ($keyword->priority_weight == 4) {
                         $cv_weight = $cv_weight + 2;
-                        array_push($keyword_found, $word.' (2/1.6)');
+                        array_push($keyword_found, $word.' (2/1.5)');
                     } else if ($keyword->priority_weight == 5) {
                         $cv_weight = $cv_weight + 2.5;
                         array_push($keyword_found, $word.' (2.5/2)');
@@ -237,11 +237,11 @@ class JobApplyController extends Controller
                     if ($keyword->priority_weight == 1) {
                         array_push($keyword_not_found, $word.' (0/0.3)');
                     } else if ($keyword->priority_weight == 2) {
-                        array_push($keyword_not_found, $word.' (0/0.7)');
+                        array_push($keyword_not_found, $word.' (0/0.65)');
                     } else if ($keyword->priority_weight == 3) {
-                        array_push($keyword_not_found, $word.' (0/1.15)');
+                        array_push($keyword_not_found, $word.' (0/1.05)');
                     } else if ($keyword->priority_weight == 4) {
-                        array_push($keyword_not_found, $word.' (0/1.6)');
+                        array_push($keyword_not_found, $word.' (0/1.5)');
                     } else if ($keyword->priority_weight == 5) {
                         array_push($keyword_not_found, $word.' (0/2)');
                     }

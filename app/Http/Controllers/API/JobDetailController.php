@@ -254,11 +254,11 @@ class JobDetailController extends Controller
                 if ($keyword->weight == 1) {
                     $require_score = $require_score + 0.3;
                 } else if ($keyword->weight == 2) {
-                    $require_score = $require_score + 0.7;
+                    $require_score = $require_score + 0.65;
                 } else if ($keyword->weight == 3) {
-                    $require_score = $require_score + 1.15;
+                    $require_score = $require_score + 1.05;
                 } else if ($keyword->weight == 4) {
-                    $require_score = $require_score + 1.6;
+                    $require_score = $require_score + 1.5;
                 } else if ($keyword->weight == 5) {
                     $require_score = $require_score + 2;
                 }
