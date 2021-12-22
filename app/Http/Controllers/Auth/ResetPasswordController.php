@@ -57,9 +57,6 @@ class ResetPasswordController extends Controller
         $user = User::where('email', $request->email)
             ->update(['password' => Hash::make($request->password)]);
         DB::table('password_resets')->where(['email' => $request->email])->delete();
-        return response()->json([
-            'success' => true,
-            'message' => 'Your password has been changed!'
-        ]);
+        return redirect(env('FRONT_URL'));
     }
 }
