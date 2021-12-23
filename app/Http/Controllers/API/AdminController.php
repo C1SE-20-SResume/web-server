@@ -32,7 +32,7 @@ class AdminController extends Controller
         // check if isAdmin
         $user = User::where('email', $request->email)->first();
         if ($user->isAdmin() && Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
-            if($user->email_verified_at == null) {
+            if ($user->email_verified_at == null) {
                 return response()->json([
                     'message' => 'Your email is not verified yet',
                 ]);
@@ -44,8 +44,7 @@ class AdminController extends Controller
                 'message' => 'Admin login successfully',
                 'api_token' => $api_token,
             ], 200);
-        } 
-        else {
+        } else {
             return response()->json([
                 'message' => 'You are not admin'
             ], 401);
@@ -108,18 +107,19 @@ class AdminController extends Controller
                     ]));
                 } else {
                     $company = $user->company;
-                    $recruiter[] = json_decode(json_encode([
-                        'user_id' => $user->id,
-                        'company_name' => $company->company_name,
-                        'logo_url' => $company->logo_url,
-                        'full_name' => $user->full_name,
-                        'gender' => $user->gender,
-                        'date_birth' => $user->date_birth,
-                        'phone_number' => $user->phone_number,
-                        'email' => $user->email,
-                        'created_at' => $user->created_at->toDateTimeString(),
-                        'updated_at' => $user->updated_at->toDateTimeString(),
-                    ]));
+                    if ($company !== null)
+                        $recruiter[] = json_decode(json_encode([
+                            'user_id' => $user->id,
+                            'company_name' => $company->company_name,
+                            'logo_url' => $company->logo_url,
+                            'full_name' => $user->full_name,
+                            'gender' => $user->gender,
+                            'date_birth' => $user->date_birth,
+                            'phone_number' => $user->phone_number,
+                            'email' => $user->email,
+                            'created_at' => $user->created_at->toDateTimeString(),
+                            'updated_at' => $user->updated_at->toDateTimeString(),
+                        ]));
                 }
             }
             $count = $list_user->count();

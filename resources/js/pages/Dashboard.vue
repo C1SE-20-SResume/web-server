@@ -169,12 +169,13 @@
                                 dark:divide-gray-700 dark:bg-gray-800
                             "
                         >
-                            <template v-for="item in jobs.data" :key="item.id">
+                            <template
+                                v-for="(item, index) in jobs.data"
+                                :key="item.id"
+                            >
                                 <tr
                                     class="text-gray-700 dark:text-gray-400"
-                                    v-if="
-                                        item.id <= maxShow && item.id >= minShow
-                                    "
+                                    v-if="index <= maxShow && index >= minShow"
                                 >
                                     <td class="px-4 py-3">
                                         <router-link
@@ -438,6 +439,7 @@ export default {
             const listUser = await this.$store.dispatch("auth/listUsers");
             this.listUser = listUser;
             this.jobs = jobs;
+            console.log(jobs.data);
             this.appliedJobs = appliedJobs;
             this.loaded = true;
         } catch (error) {

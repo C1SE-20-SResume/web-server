@@ -344,6 +344,7 @@ export default {
     },
     async mounted() {
         const res = await this.$store.dispatch("job/getListUser");
+        console.log(res);
         this.recruiters = [...res.recruiter];
         this.candidates = [...res.candidate];
         console.log(this.recruiters);
