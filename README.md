@@ -16,6 +16,7 @@ API Url: [http://localhost/]
 - [Composer](https://getcomposer.org/)
 - [Nodejs](https://nodejs.org/en/)
 - [Laragon](https://laragon.org/) (Optional: [XAMPP](https://www.apachefriends.org/index.html))
+- [Tesseract OCR](https://tesseract-ocr.github.io/tessdoc/Installation.html) (Note: [For Windows](https://github.com/UB-Mannheim/tesseract/wiki))
 
 ## How to install
 
@@ -35,6 +36,15 @@ composer install
 ```bash
 npm install
 npm run dev
+```
+
+- Install file scanning libraries
+
+```bash
+composer require lukemadhanga/php-document-parser
+composer require smalot/pdfparser
+composer require thiagoalessio/tesseract_ocr
+composer update
 ```
 
 ### Configuration
@@ -92,8 +102,9 @@ php artisan serve
 ### Document
 
 - You can login with the following account:
-  - email: recruiter@example.org | password: password | level: Recruiter
-  - email: candidate@example.org | password: password | level: Candidate
+  - email: admin@cvtojob.tk     | password: password | level: Admin
+  - email: recruiter@cvtojob.tk | password: password | level: Recruiter
+  - email: candidate@cvtojob.tk | password: password | level: Candidate
 
 - API document: Not available
 
